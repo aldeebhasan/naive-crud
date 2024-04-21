@@ -41,7 +41,7 @@ trait IndexTrait
         return request('limit', null);
     }
 
-    protected function extraIndexData(Collection|Paginator $items): array
+    protected function extraIndexData(): array
     {
         return [];
     }

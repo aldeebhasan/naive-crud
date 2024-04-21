@@ -4,6 +4,7 @@ namespace Aldeebhasan\NaiveCrud\Http\Controllers;
 
 use Aldeebhasan\NaiveCrud\Http\Controllers\Traits\IndexTrait;
 use Aldeebhasan\NaiveCrud\Http\Controllers\Traits\ResponseTrait;
+use Aldeebhasan\NaiveCrud\Http\Controllers\Traits\SearchTrait;
 use Aldeebhasan\NaiveCrud\Http\Controllers\Traits\ShowTrait;
 use Aldeebhasan\NaiveCrud\Http\Controllers\Traits\StoreTrait;
 use Aldeebhasan\NaiveCrud\Http\Controllers\Traits\UpdateTrait;
@@ -13,7 +14,7 @@ use Illuminate\Routing\Controller;
 
 abstract class CrudController extends Controller
 {
-    use IndexTrait, ShowTrait, StoreTrait, UpdateTrait, ResponseTrait;
+    use IndexTrait, ShowTrait, StoreTrait, UpdateTrait, ResponseTrait, SearchTrait;
 
     protected string $model;
 
