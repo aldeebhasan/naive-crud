@@ -52,7 +52,7 @@ trait IndexTrait
 
         if ($this->paginated) {
             return [
-                'items' => $resource::collectionCustom($items->items())->toArray(),
+                'items' => $resource::collectionCustom($items->items(), $this->user)->toArray(),
                 'meta' => Arr::except($items->toArray(), [
                     'data', 'first_page_url', 'last_page_url', 'prev_page_url', 'next_page_url', 'links',
                 ]),
