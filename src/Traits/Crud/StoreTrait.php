@@ -1,6 +1,6 @@
 <?php
 
-namespace Aldeebhasan\NaiveCrud\Http\Controllers\Traits;
+namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
 use Aldeebhasan\NaiveCrud\Http\Resources\BaseResource;
 use Illuminate\Database\Eloquent\Model;
@@ -12,14 +12,9 @@ trait StoreTrait
 {
     protected string $storeForm;
 
-    protected function beforeStoreHook(Request $request): void
-    {
-        // do some thing before call store function;
-    }
-
     public function store(Request $request): JsonResponse
     {
-        $this->beforeStoreHook($request);
+
 
         /** @var FormRequest $form */
         $form = app($this->storeForm);
@@ -27,17 +22,14 @@ trait StoreTrait
         $data = array_merge($data, $this->extraStoreData());
 
         $item = new $this->model($data);
+
+        $this->beforeStoreHook($request, $item);
         $item->save();
         $this->afterStoreHook($request, $item);
 
         $data = $this->formatCreateResponse($item);
 
         return $this->success(__('NaiveCrud::messages.stored'), $data, 201);
-    }
-
-    protected function afterStoreHook(Request $request, Model $model): void
-    {
-        // do some thing after call store function;
     }
 
     protected function extraStoreData(): array

@@ -1,8 +1,10 @@
 <?php
 
-namespace Aldeebhasan\NaiveCrud\Http\Controllers\Traits;
+namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
 use Aldeebhasan\NaiveCrud\Http\Resources\BaseResource;
+use Aldeebhasan\NaiveCrud\Lib\FilterManager;
+use Aldeebhasan\NaiveCrud\Lib\SortManager;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
@@ -21,9 +23,13 @@ trait IndexTrait
 
     public function index(Request $request): JsonResponse
     {
+        $this->beforeIndexHook($request);
         $query = $this->model::query();
         $query = $this->globalQuery($query);
         $query = $this->indexQuery($query);
+
+        FilterManager::make($request)->setFilters($this->filters)->apply($query);
+        SortManager::make($request)->setSorters($this->sorters)->apply($query);
 
         if ($this->paginated) {
             $items = $query->paginate(perPage: $this->getLimit());
@@ -32,6 +38,7 @@ trait IndexTrait
         }
         $data = $this->formatIndexResponse($items);
         $data = array_merge($data, $this->extraIndexData());
+        $this->afterIndexHook($request);
 
         return $this->success(__('NaiveCrud::messages.success'), $data);
     }
@@ -39,6 +46,14 @@ trait IndexTrait
     protected function getLimit(): int
     {
         return request('limit', null);
+    }
+
+    protected function applyFilter(Builder $query): void
+    {
+        if (!empty($this->filter)) {
+            $fields = $this->filter->fields();
+
+        }
     }
 
     protected function extraIndexData(): array

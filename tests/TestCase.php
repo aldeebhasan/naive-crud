@@ -2,7 +2,7 @@
 
 namespace Aldeebhasan\NaiveCrud\Test;
 
-use Aldeebhasan\NaiveCrud\NaiveCrudProvider;
+use Aldeebhasan\NaiveCrud\NCProvider;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
@@ -17,7 +17,7 @@ abstract class TestCase extends BaseTestCase
 
     protected function getPackageProviders($app)
     {
-        return [NaiveCrudProvider::class];
+        return [NCProvider::class];
     }
 
     protected function getEnvironmentSetUp($app)

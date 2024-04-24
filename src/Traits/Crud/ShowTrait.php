@@ -1,6 +1,6 @@
 <?php
 
-namespace Aldeebhasan\NaiveCrud\Http\Controllers\Traits;
+namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
 use Aldeebhasan\NaiveCrud\Http\Resources\BaseResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -15,11 +15,6 @@ trait ShowTrait
         return $query;
     }
 
-    protected function beforeShowHook(Request $request, Model $model): void
-    {
-        // do some thing before call show function;
-    }
-
     public function show(Request $request, $id): JsonResponse
     {
 
@@ -28,6 +23,7 @@ trait ShowTrait
         $query = $this->showQuery($query);
 
         $item = $query->findOrFail($id);
+
         $this->beforeShowHook($request, $item);
         $data = $this->formatShowResponse($item);
         $data = array_merge($data, $this->extraShowData());
@@ -35,11 +31,6 @@ trait ShowTrait
         $this->afterShowHook($request, $item);
 
         return $this->success(__('NaiveCrud::messages.success'), $data);
-    }
-
-    protected function afterShowHook(Request $request, Model $model): void
-    {
-        // do some thing after call show function;
     }
 
     protected function extraShowData(): array

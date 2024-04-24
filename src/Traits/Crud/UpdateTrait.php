@@ -1,6 +1,6 @@
 <?php
 
-namespace Aldeebhasan\NaiveCrud\Http\Controllers\Traits;
+namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
 use Aldeebhasan\NaiveCrud\Http\Resources\BaseResource;
 use Illuminate\Database\Eloquent\Model;
@@ -12,11 +12,6 @@ trait UpdateTrait
 {
     protected string $updateForm;
 
-    protected function beforeUpdateHook(Request $request, Model $model): void
-    {
-        // do some thing before call update function;
-    }
-
     public function update(Request $request, $id): JsonResponse
     {
 
@@ -26,6 +21,7 @@ trait UpdateTrait
         $data = array_merge($data, $this->extraUpdateData());
 
         $item = $this->model::findOrFail($id);
+
         $this->beforeUpdateHook($request, $item);
         $item->update($data);
         $this->afterUpdateHook($request, $item);
@@ -35,10 +31,6 @@ trait UpdateTrait
         return $this->success(__('NaiveCrud::messages.updated'), $data, 201);
     }
 
-    protected function afterUpdateHook(Request $request, Model $model): void
-    {
-        // do some thing after call update function;
-    }
 
     protected function extraUpdateData(): array
     {

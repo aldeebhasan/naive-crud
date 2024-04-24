@@ -2,25 +2,35 @@
 
 namespace Aldeebhasan\NaiveCrud\Http\Controllers;
 
-use Aldeebhasan\NaiveCrud\Http\Controllers\Traits\IndexTrait;
-use Aldeebhasan\NaiveCrud\Http\Controllers\Traits\ResponseTrait;
-use Aldeebhasan\NaiveCrud\Http\Controllers\Traits\SearchTrait;
-use Aldeebhasan\NaiveCrud\Http\Controllers\Traits\ShowTrait;
-use Aldeebhasan\NaiveCrud\Http\Controllers\Traits\StoreTrait;
-use Aldeebhasan\NaiveCrud\Http\Controllers\Traits\UpdateTrait;
+use Aldeebhasan\NaiveCrud\Contracts\FilterUI;
+use Aldeebhasan\NaiveCrud\Contracts\SortUI;
+use Aldeebhasan\NaiveCrud\Traits\Crud\DeleteTrait;
+use Aldeebhasan\NaiveCrud\Traits\Crud\HooksTrait;
+use Aldeebhasan\NaiveCrud\Traits\Crud\IndexTrait;
+use Aldeebhasan\NaiveCrud\Traits\Crud\ResponseTrait;
+use Aldeebhasan\NaiveCrud\Traits\Crud\SearchTrait;
+use Aldeebhasan\NaiveCrud\Traits\Crud\ShowTrait;
+use Aldeebhasan\NaiveCrud\Traits\Crud\StoreTrait;
+use Aldeebhasan\NaiveCrud\Traits\Crud\UpdateTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Routing\Controller;
 
 abstract class CrudController extends Controller
 {
-    use IndexTrait, ShowTrait, StoreTrait, UpdateTrait, ResponseTrait, SearchTrait;
+    use IndexTrait, ShowTrait, StoreTrait, UpdateTrait, ResponseTrait, SearchTrait, HooksTrait, DeleteTrait;
 
     protected string $model;
 
     protected string $modelResource;
 
     protected ?User $user;
+    /**
+     * @var array<FilterUI>$ filters
+     * @var array<SortUI>$ $sorters
+     */
+    protected array $filters = [];
+    protected array $sorters = [];
 
     public function __construct()
     {

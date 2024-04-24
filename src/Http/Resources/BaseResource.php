@@ -45,7 +45,7 @@ class BaseResource extends JsonResource
     public static function collectionCustom($resource, $user = null, $forShow = false, $forSearch = false): Collection
     {
         return collect($resource)->map(
-            fn ($item) => self::makeCustom($item, $user, $forShow, $forSearch)
+            fn($item) => self::makeCustom($item, $user, $forShow, $forSearch)
         )->values();
     }
 
@@ -63,16 +63,16 @@ class BaseResource extends JsonResource
 
     public function toShowArray(Request $request): array
     {
-        return [];
+        return parent::toArray($request);
     }
 
     public function toIndexArray(Request $request): array
     {
-        return [];
+        return parent::toArray($request);
     }
 
     public function toSearchArray(Request $request): array
     {
-        return [];
+        return parent::toArray($request);
     }
 }

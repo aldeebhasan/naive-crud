@@ -1,6 +1,6 @@
 <?php
 
-namespace Aldeebhasan\NaiveCrud\Http\Controllers\Traits;
+namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
 use Illuminate\Http\JsonResponse;
 

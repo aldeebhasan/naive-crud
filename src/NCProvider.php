@@ -4,7 +4,7 @@ namespace Aldeebhasan\NaiveCrud;
 
 use Illuminate\Support\ServiceProvider;
 
-class NaiveCrudProvider extends ServiceProvider
+class NCProvider extends ServiceProvider
 {
     public function boot()
     {
