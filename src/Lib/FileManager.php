@@ -3,23 +3,24 @@
 namespace Aldeebhasan\NaiveCrud\Lib;
 
 use Aldeebhasan\NaiveCrud\Traits\Makable;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
-use Illuminate\Http\UploadedFile;
 
 class FileManager
 {
     use Makable;
 
     protected string $path = '';
+
     protected string $fileName = '';
 
     public function setPath(string $path): self
     {
         $this->path = $path;
+
         return $this;
     }
-
 
     public function uploadImage(UploadedFile $file, string $name = ''): array
     {
@@ -41,7 +42,7 @@ class FileManager
             $image = $image->cover($width, $width);
             $encoded = $image->encodeByExtension($extension, quality: 75)->toString();
 
-            $thumbnailName = "thumbnails/" . pathinfo($response['url'], PATHINFO_FILENAME);
+            $thumbnailName = 'thumbnails/'.pathinfo($response['url'], PATHINFO_FILENAME);
             $this->upload($encoded, $thumbnailName, $extension, $mime);
         }
 
@@ -57,7 +58,6 @@ class FileManager
         return $this->upload($file, $name, $extension, $mime);
     }
 
-
     private function upload(string $file, string $name = '', string $extension = '', string $mime = ''): array
     {
         $base = '';
@@ -67,7 +67,7 @@ class FileManager
             $base = 'public/';
         }
 
-        $name = $name ?: (time() . uniqid());
+        $name = $name ?: (time().uniqid());
         $name = "$name.$extension";
         $path = "$this->path/$name";
         Storage::put("public/{$path}", $file, 'public');

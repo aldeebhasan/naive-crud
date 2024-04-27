@@ -7,8 +7,6 @@ use Aldeebhasan\NaiveCrud\Traits\Crud\ResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 abstract class UploadController extends Controller
 {
@@ -41,5 +39,4 @@ abstract class UploadController extends Controller
 
         return $this->success(__('NaiveCrud::messages.uploaded'), $info);
     }
-
 }
