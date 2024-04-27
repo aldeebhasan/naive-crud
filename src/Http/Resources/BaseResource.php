@@ -45,7 +45,7 @@ class BaseResource extends JsonResource
     public static function collectionCustom($resource, $user = null, $forShow = false, $forSearch = false): Collection
     {
         return collect($resource)->map(
-            fn($item) => self::makeCustom($item, $user, $forShow, $forSearch)
+            fn ($item) => self::makeCustom($item, $user, $forShow, $forSearch)
         )->values();
     }
 

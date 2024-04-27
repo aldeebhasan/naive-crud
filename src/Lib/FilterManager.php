@@ -26,6 +26,7 @@ class FilterManager
     public function setFilters(FilterUI|array $filters): self
     {
         $this->filters = Arr::wrap($filters);
+
         return $this;
     }
 
@@ -36,6 +37,7 @@ class FilterManager
             $this->handleFields($query, $fields);
 
         }
+
         return $query;
     }
 
@@ -64,14 +66,14 @@ class FilterManager
             }
 
             $value = match ($operator) {
-                'like' => '%' . $value . '%',
-                'like%' => $value . '%',
-                '%like' => '%' . $value,
+                'like' => '%'.$value.'%',
+                'like%' => $value.'%',
+                '%like' => '%'.$value,
                 default => $value
             };
-            if (!empty($callback) && is_callable($callback)) {
+            if (! empty($callback) && is_callable($callback)) {
                 call_user_func($callback, $query, $value);
-            } elseif (!empty($relation) && is_string($relation)) {
+            } elseif (! empty($relation) && is_string($relation)) {
                 $query->whereHas($relation, function ($q) use ($column, $operator, $value) {
                     $q->where($column, $operator, $value);
                 });
@@ -81,5 +83,4 @@ class FilterManager
         }
 
     }
-
 }

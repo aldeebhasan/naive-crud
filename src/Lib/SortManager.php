@@ -2,7 +2,6 @@
 
 namespace Aldeebhasan\NaiveCrud\Lib;
 
-use Aldeebhasan\NaiveCrud\Contracts\FilterUI;
 use Aldeebhasan\NaiveCrud\Contracts\SortUI;
 use Aldeebhasan\NaiveCrud\Traits\Makable;
 use Illuminate\Database\Eloquent\Builder;
@@ -27,6 +26,7 @@ class SortManager
     public function setSorters(SortUI|array $sorts): self
     {
         $this->sorts = Arr::wrap($sorts);
+
         return $this;
     }
 
@@ -37,6 +37,7 @@ class SortManager
             $this->handleFields($query, $fields);
 
         }
+
         return $query;
     }
 
@@ -58,7 +59,7 @@ class SortManager
             $direction = $field['direction'] ?? 'desc';
             $callback = $field['callback'] ?? null;
 
-            if (!empty($callback) && is_callable($callback)) {
+            if (! empty($callback) && is_callable($callback)) {
                 call_user_func($callback, $query, $value);
             } else {
                 $query->orderBy($column, $direction);
@@ -66,5 +67,4 @@ class SortManager
         }
 
     }
-
 }

@@ -22,7 +22,7 @@ abstract class TestCase extends BaseTestCase
 
     protected function getEnvironmentSetUp($app)
     {
-        
+        $app['config']->set('naive-crud.image_thumbnail', true);
 
     }
 }

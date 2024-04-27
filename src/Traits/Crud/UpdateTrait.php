@@ -31,7 +31,6 @@ trait UpdateTrait
         return $this->success(__('NaiveCrud::messages.updated'), $data, 201);
     }
 
-
     protected function extraUpdateData(): array
     {
         return [];

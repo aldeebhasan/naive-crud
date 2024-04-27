@@ -6,5 +6,5 @@ return [
     'stored' => 'A new item has been stored successfully',
     'updated' => 'The item has been updated successfully',
     'deleted' => 'The item has been deleted successfully',
-
+    'uploaded' => 'The item has been uploaded successfully',
 ];

@@ -25,11 +25,13 @@ abstract class CrudController extends Controller
     protected string $modelResource;
 
     protected ?User $user;
+
     /**
      * @var array<FilterUI>$ filters
-     * @var array<SortUI>$ $sorters
+     * @var array<SortUI>$
      */
     protected array $filters = [];
+
     protected array $sorters = [];
 
     public function __construct()

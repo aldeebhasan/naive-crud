@@ -2,9 +2,7 @@
 
 namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
-use Aldeebhasan\NaiveCrud\Http\Resources\BaseResource;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

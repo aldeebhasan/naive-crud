@@ -26,6 +26,6 @@ trait HooksTrait
         if (method_exists($this, $name)) {
             $this->$name(...$arguments);
         }
-        throw new \BadMethodCallException('Method ' . $name . ' does not exist.');
+        throw new \BadMethodCallException('Method '.$name.' does not exist.');
     }
 }

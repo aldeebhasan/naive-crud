@@ -15,7 +15,6 @@ trait StoreTrait
     public function store(Request $request): JsonResponse
     {
 
-
         /** @var FormRequest $form */
         $form = app($this->storeForm);
         $data = $form->validated();
