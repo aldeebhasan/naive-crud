@@ -5,7 +5,9 @@ namespace Aldeebhasan\NaiveCrud\Http\Controllers;
 use Aldeebhasan\NaiveCrud\Contracts\FilterUI;
 use Aldeebhasan\NaiveCrud\Contracts\SortUI;
 use Aldeebhasan\NaiveCrud\Traits\Crud\DeleteTrait;
+use Aldeebhasan\NaiveCrud\Traits\Crud\ExportTrait;
 use Aldeebhasan\NaiveCrud\Traits\Crud\HooksTrait;
+use Aldeebhasan\NaiveCrud\Traits\Crud\ImportTrait;
 use Aldeebhasan\NaiveCrud\Traits\Crud\IndexTrait;
 use Aldeebhasan\NaiveCrud\Traits\Crud\ResponseTrait;
 use Aldeebhasan\NaiveCrud\Traits\Crud\SearchTrait;
@@ -18,7 +20,7 @@ use Illuminate\Routing\Controller;
 
 abstract class CrudController extends Controller
 {
-    use IndexTrait, ShowTrait, StoreTrait, UpdateTrait, ResponseTrait, SearchTrait, HooksTrait, DeleteTrait;
+    use IndexTrait, ShowTrait, StoreTrait, UpdateTrait, ResponseTrait, SearchTrait, HooksTrait, DeleteTrait, ImportTrait, ExportTrait;
 
     protected string $model;
 

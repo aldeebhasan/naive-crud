@@ -7,4 +7,6 @@ return [
     'updated' => 'The item has been updated successfully',
     'deleted' => 'The item has been deleted successfully',
     'uploaded' => 'The item has been uploaded successfully',
+    'imported' => 'The items has been imported successfully',
+    'exported' => 'The items has been exported successfully',
 ];

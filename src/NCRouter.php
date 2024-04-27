@@ -13,7 +13,7 @@ class NCRouter extends BaseRouter
         $this->get("{$name}/search", [$controller, 'search'])->name("{$name}.search");
         $this->get("{$name}/export", [$controller, 'export'])->name("{$name}.excel");
         $this->post("{$name}/import", [$controller, 'import'])->name("{$name}.import");
-        $this->get("{$name}/import-sample", [$controller, 'importSample'])->name("{$name}.import-sample");
+        $this->get("{$name}/import-template", [$controller, 'importTemplate'])->name("{$name}.import-template");
 
         return parent::apiResource($name, $controller, $options);
     }

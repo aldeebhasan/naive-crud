@@ -18,6 +18,8 @@ use Illuminate\Http\Request;
  * @method  afterStoreHook(Request $request, Model $model)
  * @method  beforeDeleteHook(Request $request, Model $model)
  * @method  afterDeleteHook(Request $request, Model $model)
+ * @method  beforeExportHook(Request $request)
+ * @method  afterExportHook(Request $request)
  */
 trait HooksTrait
 {
@@ -26,6 +28,6 @@ trait HooksTrait
         if (method_exists($this, $name)) {
             $this->$name(...$arguments);
         }
-        throw new \BadMethodCallException('Method '.$name.' does not exist.');
+        throw new \BadMethodCallException('Method '.$name.' does not exist.', 400);
     }
 }
