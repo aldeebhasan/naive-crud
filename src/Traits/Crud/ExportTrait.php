@@ -27,7 +27,6 @@ trait ExportTrait
         ]);
 
         $this->beforeExportHook($request);
-
         $query = $this->prepareExportQuery($request);
         $target = $validated['target'] ?? 'page';
         $targetType = match ($validated['type'] ?? 'csv') {

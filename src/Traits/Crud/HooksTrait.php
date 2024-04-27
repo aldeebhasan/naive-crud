@@ -20,6 +20,8 @@ use Illuminate\Http\Request;
  * @method  afterDeleteHook(Request $request, Model $model)
  * @method  beforeExportHook(Request $request)
  * @method  afterExportHook(Request $request)
+ * @method  beforeImportHook(Request $request)
+ * @method  afterImportHook(Request $request)
  */
 trait HooksTrait
 {

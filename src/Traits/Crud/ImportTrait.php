@@ -12,12 +12,13 @@ trait ImportTrait
 {
     public function import(Request $request): JsonResponse
     {
-
         $validated = $request->validate(['file' => 'required|string']);
         $file = $validated['file'];
 
+        $this->beforeImportHook($request);
         $user = auth()->user();
         Excel::import(new ModelImport($this->model, $user), $file);
+        $this->afterImportHook($request);
 
         return $this->success(__('NaiveCrud::messages.imported'));
     }
