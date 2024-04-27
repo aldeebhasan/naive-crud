@@ -2,6 +2,7 @@
 
 namespace Aldeebhasan\NaiveCrud;
 
+use Aldeebhasan\NaiveCrud\Http\Controllers\UploadController;
 use Illuminate\Routing\PendingResourceRegistration;
 use Illuminate\Routing\Router as BaseRouter;
 
@@ -17,9 +18,9 @@ class NCRouter extends BaseRouter
         return parent::apiResource($name, $controller, $options);
     }
 
-    public function files($name, $controller, array $options = []): void
+    public function files($name): void
     {
-        $this->post("{$name}/upload-image", [$controller, 'image'])->name("{$name}.image");
-        $this->post("{$name}/upload-file", [$controller, 'file'])->name("{$name}.file");
+        $this->post("{$name}/upload-image", [UploadController::class, 'image'])->name("{$name}.image");
+        $this->post("{$name}/upload-file", [UploadController::class, 'file'])->name("{$name}.file");
     }
 }
