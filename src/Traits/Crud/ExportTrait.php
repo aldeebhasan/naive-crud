@@ -4,9 +4,11 @@ namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
 use Aldeebhasan\NaiveCrud\Export\ModelCollectionExport;
 use Aldeebhasan\NaiveCrud\Export\ModelQueryExport;
+use Aldeebhasan\NaiveCrud\Jobs\CompletedExportJob;
 use Aldeebhasan\NaiveCrud\Lib\FilterManager;
 use Aldeebhasan\NaiveCrud\Lib\SortManager;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
@@ -14,12 +16,14 @@ use Maatwebsite\Excel\Excel;
 
 trait ExportTrait
 {
+    protected ?string $completedJobNotification = null;
+
     protected function exportQuery(Builder $query): Builder
     {
         return $this->indexQuery($query);
     }
 
-    public function export(Request $request): Response
+    private function handleExport(Request $request): array
     {
         $validated = $request->validate([
             'type' => 'nullable|in:excel,csv,html',
@@ -43,9 +47,31 @@ trait ExportTrait
         } else {
             $handler = new ModelQueryExport($query);
         }
+        $handler->forModel($this->model);
+
+        return [$handler, $fileName];
+    }
+
+    public function export(Request $request): JsonResponse
+    {
+        [$handler, $fileName] = $this->handleExport($request);
+        $fileUrl = $this->getExportedFilePath($fileName);
+
+        $handler->queue("/public/exports/$fileName")->chain([
+            new CompletedExportJob(request()->user(), $fileUrl, $this->completedJobNotification),
+        ]);
         $this->afterExportHook($request);
 
-        return $handler->download($fileName, $targetType);
+        return $this->success(__('NaiveCrud::messages.exported'));
+    }
+
+    public function exportDirect(Request $request): Response
+    {
+        [$handler, $fileName] = $this->handleExport($request);
+
+        $this->afterExportHook($request);
+
+        return $handler->download($fileName);
     }
 
     private function prepareExportQuery(Request $request): Builder
@@ -58,6 +84,18 @@ trait ExportTrait
         SortManager::make($request)->setSorters($this->sorters)->apply($query);
 
         return $query;
+    }
 
+    private function getExportedFilePath(string $fileName): string
+    {
+        $base = '';
+        if (config('filesystems.default') === 'local') {
+            $base = 'storage/';
+        } elseif (config('filesystems.default') === 's3') {
+            $base = 'public/';
+        }
+        $path = "{$base}/exports/{$fileName}";
+
+        return asset($path);
     }
 }

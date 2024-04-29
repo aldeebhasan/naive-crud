@@ -3,11 +3,21 @@
 namespace Aldeebhasan\NaiveCrud\Export;
 
 use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
-class ModelExport implements WithMapping
+class ModelExport implements WithMapping, WithHeadings
 {
     use Exportable;
+
+    private string $model;
+
+    public function forModel(string $model): self
+    {
+        $this->model = $model;
+
+        return $this;
+    }
 
     public function map($row): array
     {
@@ -16,5 +26,14 @@ class ModelExport implements WithMapping
         }
 
         return $row->toArray();
+    }
+
+    public function headings(): array
+    {
+        if (method_exists($this->model, 'importFields')) {
+            return $this->model::importFields();
+        }
+
+        return [];
     }
 }

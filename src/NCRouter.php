@@ -11,7 +11,8 @@ class NCRouter extends BaseRouter
     public function apiResource($name, $controller, array $options = []): PendingResourceRegistration
     {
         $this->get("{$name}/search", [$controller, 'search'])->name("{$name}.search");
-        $this->get("{$name}/export", [$controller, 'export'])->name("{$name}.excel");
+        $this->get("{$name}/export", [$controller, 'export'])->name("{$name}.export");
+        $this->get("{$name}/direct-export", [$controller, 'exportDirect'])->name("{$name}.export-direct");
         $this->post("{$name}/import", [$controller, 'import'])->name("{$name}.import");
         $this->get("{$name}/import-template", [$controller, 'importTemplate'])->name("{$name}.import-template");
 

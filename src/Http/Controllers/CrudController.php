@@ -2,6 +2,7 @@
 
 namespace Aldeebhasan\NaiveCrud\Http\Controllers;
 
+use _PHPStan_e956fad2e\Symfony\Component\Console\Exception\LogicException;
 use Aldeebhasan\NaiveCrud\Contracts\FilterUI;
 use Aldeebhasan\NaiveCrud\Contracts\SortUI;
 use Aldeebhasan\NaiveCrud\Traits\Crud\DeleteTrait;
@@ -44,6 +45,8 @@ abstract class CrudController extends Controller
 
             return $next($request);
         });
+
+        throw_if(empty($this->model), LogicException::class, 'Model need to be defined');
     }
 
     public function afterConstructHook(self $instance): void
