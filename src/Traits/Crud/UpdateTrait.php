@@ -20,7 +20,10 @@ trait UpdateTrait
         $data = $form->validated();
         $data = array_merge($data, $this->extraUpdateData());
 
-        $item = $this->model::findOrFail($id);
+        $query = $this->model::query();
+        $query = $this->globalQuery($query);
+
+        $item = $query->findOrFail($id);
 
         $this->beforeUpdateHook($request, $item);
         $item->update($data);
@@ -29,6 +32,33 @@ trait UpdateTrait
         $data = $this->formatUpdateResponse($item);
 
         return $this->success(__('NaiveCrud::messages.updated'), $data, 201);
+    }
+
+    public function bulkUpdate(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'resources' => 'required|array|min:1',
+        ]);
+        $query = $this->model::query();
+        $query = $this->globalQuery($query);
+
+        $this->beforeBulkUpdateHook($request);
+        $count = 0;
+        foreach ($validated ['resources'] as $id => $data) {
+            $item = $query->find($id);
+            if (!$item) continue;
+
+            \request()->merge($data);
+            /** @var FormRequest $form */
+            $form = app($this->updateForm);
+            $data = $form->validated();
+            $data = array_merge($data, $this->extraUpdateData());
+            $item->update($data);
+            $count++;
+        }
+        $this->afterBulkUpdateHook($request);
+
+        return $this->success(__('NaiveCrud::messages.bulk-updated', ['count' => $count]));
     }
 
     protected function extraUpdateData(): array

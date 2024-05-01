@@ -31,6 +31,29 @@ trait StoreTrait
         return $this->success(__('NaiveCrud::messages.stored'), $data, 201);
     }
 
+    public function bulkStore(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'resources' => 'required|array|min:1',
+        ]);
+
+        $this->beforeBulkStoreHook($request);
+        foreach ($validated ['resources'] as $data) {
+            \request()->merge($data);
+            /** @var FormRequest $form */
+            $form = app($this->storeForm);
+            $data = $form->validated();
+            $data = array_merge($data, $this->extraStoreData());
+
+            $item = new $this->model($data);
+            $item->save();
+        }
+
+        $this->afterBulkStoreHook($request);
+        $count = count($validated ['resources']);
+        return $this->success(__('NaiveCrud::messages.bulk-stored', ['count' => $count]));
+    }
+
     protected function extraStoreData(): array
     {
         return [];

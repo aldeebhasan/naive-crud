@@ -8,7 +8,7 @@ use Illuminate\Routing\Router as BaseRouter;
 
 class NCRouter extends BaseRouter
 {
-    public function apiResource($name, $controller, array $options = []): PendingResourceRegistration
+    private function registerPackageRoutes(string $name, string $controller, bool $withBulk): void
     {
         $this->get("{$name}/search", [$controller, 'search'])->name("{$name}.search");
         $this->get("{$name}/export", [$controller, 'export'])->name("{$name}.export");
@@ -16,7 +16,25 @@ class NCRouter extends BaseRouter
         $this->post("{$name}/import", [$controller, 'import'])->name("{$name}.import");
         $this->get("{$name}/import-template", [$controller, 'importTemplate'])->name("{$name}.import-template");
 
+        if ($withBulk) {
+            $this->post("{$name}/bulk", [$controller, 'bulkStore'])->name("{$name}.bulk-store");
+            $this->put("{$name}/bulk", [$controller, 'bulkUpdate'])->name("{$name}.bulk-update");
+            $this->delete("{$name}/bulk", [$controller, 'bulkDelete'])->name("{$name}.bulk-delete");
+        }
+    }
+
+    public function apiResource($name, $controller, array $options = [], bool $withBulk = false): PendingResourceRegistration
+    {
+        $this->registerPackageRoutes($name, $controller, $withBulk);
+
         return parent::apiResource($name, $controller, $options);
+    }
+
+    public function resource($name, $controller, array $options = [], bool $withBulk = false): PendingResourceRegistration
+    {
+        $this->registerPackageRoutes($name, $controller, $withBulk);
+
+        return parent::resource($name, $controller, $options);
     }
 
     public function files($name): void

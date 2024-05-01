@@ -22,6 +22,12 @@ use Illuminate\Http\Request;
  * @method  afterExportHook(Request $request)
  * @method  beforeImportHook(Request $request)
  * @method  afterImportHook(Request $request)
+ * @method  beforeBulkStoreHook(Request $request)
+ * @method  afterBulkStoreHook(Request $request)
+ * @method  beforeBulkUpdateHook(Request $request)
+ * @method  afterBulkUpdateHook(Request $request)
+ * @method  beforeBulkDeleteHook(Request $request)
+ * @method  afterBulkDeleteHook(Request $request)
  */
 trait HooksTrait
 {
