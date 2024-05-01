@@ -60,12 +60,7 @@ class FileManager
 
     private function upload(string $file, string $name = '', string $extension = '', string $mime = ''): array
     {
-        $base = '';
-        if (config('filesystems.default') === 'local') {
-            $base = 'storage/';
-        } elseif (config('filesystems.default') === 's3') {
-            $base = 'public/';
-        }
+        $base = $this->getBasePath();
 
         $name = $name ?: (time().uniqid());
         $name = "$name.$extension";
@@ -80,5 +75,17 @@ class FileManager
                 'mime' => $mime,
             ],
         ];
+    }
+
+    public function getBasePath(): string
+    {
+        $base = '';
+        if (config('filesystems.default') === 'local') {
+            $base = 'storage/';
+        } elseif (config('filesystems.default') === 's3') {
+            $base = 'public/';
+        }
+
+        return $base;
     }
 }

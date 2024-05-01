@@ -5,6 +5,7 @@ namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 use Aldeebhasan\NaiveCrud\Export\ModelCollectionExport;
 use Aldeebhasan\NaiveCrud\Export\ModelQueryExport;
 use Aldeebhasan\NaiveCrud\Jobs\CompletedExportJob;
+use Aldeebhasan\NaiveCrud\Lib\FileManager;
 use Aldeebhasan\NaiveCrud\Lib\FilterManager;
 use Aldeebhasan\NaiveCrud\Lib\SortManager;
 use Illuminate\Database\Eloquent\Builder;
@@ -88,12 +89,7 @@ trait ExportTrait
 
     private function getExportedFilePath(string $fileName): string
     {
-        $base = '';
-        if (config('filesystems.default') === 'local') {
-            $base = 'storage/';
-        } elseif (config('filesystems.default') === 's3') {
-            $base = 'public/';
-        }
+        $base = FileManager::make()->getBasePath();
         $path = "{$base}/exports/{$fileName}";
 
         return asset($path);
