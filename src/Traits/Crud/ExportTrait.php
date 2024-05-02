@@ -19,12 +19,26 @@ trait ExportTrait
 {
     protected ?string $completedJobNotification = null;
 
+    protected bool $exportAllShouldQueue = true;
+
     protected function exportQuery(Builder $query): Builder
     {
         return $this->indexQuery($query);
     }
 
-    private function handleExport(Request $request): array
+    private function prepareExportQuery(Request $request): Builder
+    {
+        $query = $this->model::query();
+        $query = $this->globalQuery($query);
+        $query = $this->exportQuery($query);
+
+        FilterManager::make($request)->setFilters($this->filters)->apply($query);
+        SortManager::make($request)->setSorters($this->sorters)->apply($query);
+
+        return $query;
+    }
+
+    public function export(Request $request): Response|JsonResponse
     {
         $validated = $request->validate([
             'type' => 'nullable|in:excel,csv,html',
@@ -41,6 +55,7 @@ trait ExportTrait
         };
         $fileName = Str::snake(Str::pluralStudly(class_basename($this->model)));
         $fileName = sprintf('%s_%s.%s', $fileName, $target, strtolower($targetType));
+        $fileUrl = $this->getExportedFilePath($fileName);
 
         if ($target === 'page') {
             $items = $query->simplePaginate()->getCollection();
@@ -50,41 +65,17 @@ trait ExportTrait
         }
         $handler->forModel($this->model);
 
-        return [$handler, $fileName];
-    }
-
-    public function export(Request $request): JsonResponse
-    {
-        [$handler, $fileName] = $this->handleExport($request);
-        $fileUrl = $this->getExportedFilePath($fileName);
-
-        $handler->queue("/public/exports/$fileName")->chain([
-            new CompletedExportJob(request()->user(), $fileUrl, $this->completedJobNotification),
-        ]);
         $this->afterExportHook($request);
 
-        return $this->success(__('NaiveCrud::messages.exported'));
-    }
+        if ($target === 'all' && $this->exportAllShouldQueue) {
+            $handler->queue("/public/exports/$fileName")->chain([
+                new CompletedExportJob(request()->user(), $fileUrl, $this->completedJobNotification),
+            ]);
 
-    public function exportDirect(Request $request): Response
-    {
-        [$handler, $fileName] = $this->handleExport($request);
-
-        $this->afterExportHook($request);
+            return $this->success(__('NaiveCrud::messages.exported'));
+        }
 
         return $handler->download($fileName);
-    }
-
-    private function prepareExportQuery(Request $request): Builder
-    {
-        $query = $this->model::query();
-        $query = $this->globalQuery($query);
-        $query = $this->exportQuery($query);
-
-        FilterManager::make($request)->setFilters($this->filters)->apply($query);
-        SortManager::make($request)->setSorters($this->sorters)->apply($query);
-
-        return $query;
     }
 
     private function getExportedFilePath(string $fileName): string

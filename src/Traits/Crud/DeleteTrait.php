@@ -2,8 +2,6 @@
 
 namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -24,7 +22,7 @@ trait DeleteTrait
         return $this->success(__('NaiveCrud::messages.deleted'));
     }
 
-    public function bulkDelete(Request $request): JsonResponse
+    public function bulkDestroy(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'resources' => 'required|array|min:1',
@@ -35,7 +33,7 @@ trait DeleteTrait
 
         $key = (new $this->model)->getKey();
         $this->beforeBulkDeleteHook($request);
-        $ids = $validated ['resources'];
+        $ids = $validated['resources'];
         $count = $query->whereIn($key, $ids)->delete();
         $this->afterBulkDeleteHook($request);
 

@@ -2,6 +2,7 @@
 
 namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
+use Aldeebhasan\NaiveCrud\Http\Requests\BaseForm;
 use Aldeebhasan\NaiveCrud\Http\Resources\BaseResource;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
@@ -36,24 +37,22 @@ trait UpdateTrait
 
     public function bulkUpdate(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'resources' => 'required|array|min:1',
-        ]);
+
+        /** @var BaseForm $form */
+        $form = app($this->updateForm);
+        $data = $form->validated();
+
         $query = $this->model::query();
         $query = $this->globalQuery($query);
 
         $this->beforeBulkUpdateHook($request);
         $count = 0;
-        foreach ($validated ['resources'] as $id => $data) {
+        foreach ($data['resources'] as $id => $itemData) {
             $item = $query->find($id);
-            if (!$item) continue;
+            if (! $item) continue;
 
-            \request()->merge($data);
-            /** @var FormRequest $form */
-            $form = app($this->updateForm);
-            $data = $form->validated();
-            $data = array_merge($data, $this->extraUpdateData());
-            $item->update($data);
+            $itemData = array_merge($itemData, $this->extraUpdateData());
+            $item->update($itemData);
             $count++;
         }
         $this->afterBulkUpdateHook($request);

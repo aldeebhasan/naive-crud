@@ -2,9 +2,9 @@
 
 namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
+use Aldeebhasan\NaiveCrud\Http\Requests\BaseForm;
 use Aldeebhasan\NaiveCrud\Http\Resources\BaseResource;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -15,7 +15,7 @@ trait StoreTrait
     public function store(Request $request): JsonResponse
     {
 
-        /** @var FormRequest $form */
+        /** @var BaseForm $form */
         $form = app($this->storeForm);
         $data = $form->validated();
         $data = array_merge($data, $this->extraStoreData());
@@ -33,24 +33,21 @@ trait StoreTrait
 
     public function bulkStore(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'resources' => 'required|array|min:1',
-        ]);
+        /** @var BaseForm $form */
+        $form = app($this->storeForm);
+        $data = $form->validated();
 
         $this->beforeBulkStoreHook($request);
-        foreach ($validated ['resources'] as $data) {
-            \request()->merge($data);
-            /** @var FormRequest $form */
-            $form = app($this->storeForm);
-            $data = $form->validated();
-            $data = array_merge($data, $this->extraStoreData());
-
-            $item = new $this->model($data);
+        $count = 0;
+        foreach ($data['resources'] as $itemData) {
+            $itemData = array_merge($itemData, $this->extraStoreData());
+            $item = new $this->model($itemData);
             $item->save();
+            $count++;
         }
 
         $this->afterBulkStoreHook($request);
-        $count = count($validated ['resources']);
+
         return $this->success(__('NaiveCrud::messages.bulk-stored', ['count' => $count]));
     }
 
