@@ -10,13 +10,11 @@ use Illuminate\Http\Request;
 
 trait StoreTrait
 {
-    protected string $storeForm;
-
     public function store(Request $request): JsonResponse
     {
 
         /** @var BaseForm $form */
-        $form = app($this->storeForm);
+        $form = app($this->modelForm);
         $data = $form->validated();
         $data = array_merge($data, $this->extraStoreData());
 
@@ -34,7 +32,7 @@ trait StoreTrait
     public function bulkStore(Request $request): JsonResponse
     {
         /** @var BaseForm $form */
-        $form = app($this->storeForm);
+        $form = app($this->modelForm);
         $data = $form->validated();
 
         $this->beforeBulkStoreHook($request);

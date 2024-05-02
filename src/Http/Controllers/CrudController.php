@@ -25,6 +25,8 @@ abstract class CrudController extends Controller
 
     protected string $model;
 
+    protected string $modelForm;
+
     protected string $modelResource;
 
     protected ?User $user;

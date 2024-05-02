@@ -11,13 +11,11 @@ use Illuminate\Http\Request;
 
 trait UpdateTrait
 {
-    protected string $updateForm;
-
     public function update(Request $request, $id): JsonResponse
     {
 
         /** @var FormRequest $form */
-        $form = app($this->updateForm);
+        $form = app($this->modelForm);
         $data = $form->validated();
         $data = array_merge($data, $this->extraUpdateData());
 
@@ -39,7 +37,7 @@ trait UpdateTrait
     {
 
         /** @var BaseForm $form */
-        $form = app($this->updateForm);
+        $form = app($this->modelForm);
         $data = $form->validated();
 
         $query = $this->model::query();
