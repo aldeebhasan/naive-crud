@@ -23,6 +23,7 @@ trait UpdateTrait
         $query = $this->globalQuery($query);
 
         $item = $query->findOrFail($id);
+        $this->can($this->getUpdateAbility(), $item);
 
         $this->beforeUpdateHook($request, $item);
         $item->update($data);
@@ -35,7 +36,7 @@ trait UpdateTrait
 
     public function bulkUpdate(Request $request): JsonResponse
     {
-
+        $this->can($this->getUpdateAbility());
         /** @var BaseForm $form */
         $form = app($this->modelForm);
         $data = $form->validated();

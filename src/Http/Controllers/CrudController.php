@@ -5,6 +5,7 @@ namespace Aldeebhasan\NaiveCrud\Http\Controllers;
 use _PHPStan_e956fad2e\Symfony\Component\Console\Exception\LogicException;
 use Aldeebhasan\NaiveCrud\Contracts\FilterUI;
 use Aldeebhasan\NaiveCrud\Contracts\SortUI;
+use Aldeebhasan\NaiveCrud\Traits\Crud\AuthorizeTrait;
 use Aldeebhasan\NaiveCrud\Traits\Crud\DeleteTrait;
 use Aldeebhasan\NaiveCrud\Traits\Crud\ExportTrait;
 use Aldeebhasan\NaiveCrud\Traits\Crud\HooksTrait;
@@ -21,7 +22,8 @@ use Illuminate\Routing\Controller;
 
 abstract class CrudController extends Controller
 {
-    use IndexTrait, ShowTrait, StoreTrait, UpdateTrait, ResponseTrait, SearchTrait, HooksTrait, DeleteTrait, ImportTrait, ExportTrait;
+    use IndexTrait, ShowTrait, StoreTrait, UpdateTrait, ResponseTrait, SearchTrait,
+        HooksTrait, DeleteTrait, ImportTrait, ExportTrait, AuthorizeTrait;
 
     protected string $model;
 

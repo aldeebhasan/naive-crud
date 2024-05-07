@@ -21,6 +21,8 @@ trait SearchTrait
 
     public function search(Request $request): JsonResponse
     {
+        $this->can($this->getIndexAbility());
+
         $value = $request->get($this->searchKeyword);
         $this->beforeSearchHook($request);
         $query = $this->model::query();

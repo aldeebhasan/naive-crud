@@ -12,7 +12,7 @@ trait StoreTrait
 {
     public function store(Request $request): JsonResponse
     {
-
+        $this->can($this->getCreateAbility());
         /** @var BaseForm $form */
         $form = app($this->modelForm);
         $data = $form->validated();
@@ -31,6 +31,8 @@ trait StoreTrait
 
     public function bulkStore(Request $request): JsonResponse
     {
+        $this->can($this->getCreateAbility());
+
         /** @var BaseForm $form */
         $form = app($this->modelForm);
         $data = $form->validated();

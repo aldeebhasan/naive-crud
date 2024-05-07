@@ -23,6 +23,7 @@ trait ShowTrait
         $query = $this->showQuery($query);
 
         $item = $query->findOrFail($id);
+        $this->can($this->getShowAbility(), $item);
 
         $this->beforeShowHook($request, $item);
         $data = $this->formatShowResponse($item);

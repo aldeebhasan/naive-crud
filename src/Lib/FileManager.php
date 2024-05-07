@@ -14,6 +14,15 @@ class FileManager
     protected string $path = '';
 
     protected string $fileName = '';
+    protected UploadedFile $file;
+
+
+    public function setFile(UploadedFile $file): self
+    {
+        $this->file = $file;
+
+        return $this;
+    }
 
     public function setPath(string $path): self
     {
@@ -22,11 +31,10 @@ class FileManager
         return $this;
     }
 
-    public function uploadImage(UploadedFile $file, string $name = ''): array
+    public function uploadImage(string $name = ''): array
     {
-        $extension = strtolower($file->getClientOriginalExtension()) === 'png' ?: 'jpeg';
-        $mime = $file->getMimeType();
-        $file = file_get_contents($file);
+        $extension = strtolower($this->file->getClientOriginalExtension()) === 'png' ?: 'jpeg';
+        $file = file_get_contents($this->file);
 
         $image = ImageManager::imagick()->read($file);
         $width = config('naive-crud.image_max_width');
@@ -34,7 +42,7 @@ class FileManager
         $image = $image->scaleDown($width, $height);
         $encoded = $image->encodeByExtension($extension, quality: 75)->toString();
 
-        $response = $this->upload($encoded, $name, $extension, $mime);
+        $response = $this->upload($encoded, $name, $extension);
 
         if (config('naive-crud.image_thumbnail', false)) {
             $image = ImageManager::imagick()->read($file);
@@ -42,50 +50,52 @@ class FileManager
             $image = $image->cover($width, $width);
             $encoded = $image->encodeByExtension($extension, quality: 75)->toString();
 
-            $thumbnailName = 'thumbnails/'.pathinfo($response['url'], PATHINFO_FILENAME);
-            $this->upload($encoded, $thumbnailName, $extension, $mime);
+            $thumbnailName = 'thumbnails/' . pathinfo($response['url'], PATHINFO_FILENAME);
+            $this->upload($encoded, $thumbnailName, $extension);
         }
 
         return $response;
     }
 
-    public function uploadFile(UploadedFile $file, string $name = ''): array
+    public function uploadFile(string $name = ''): array
     {
-        $extension = $file->getClientOriginalExtension();
-        $mime = $file->getMimeType();
-        $file = file_get_contents($file);
+        $extension = $this->file->getClientOriginalExtension();
+        $file = file_get_contents($this->file);
 
-        return $this->upload($file, $name, $extension, $mime);
+        return $this->upload($file, $name, $extension);
     }
 
-    private function upload(string $file, string $name = '', string $extension = '', string $mime = ''): array
+    private function upload(string $file, string $name = '', string $extension = ''): array
     {
-        $base = $this->getBasePath();
-
-        $name = $name ?: (time().uniqid());
+        $name = $name ?: (time() . uniqid());
         $name = "$name.$extension";
         $path = "$this->path/$name";
-        Storage::put("public/{$path}", $file, 'public');
-        $path = "{$base}{$path}";
+        Storage::put($this->getStoragePath($path), $file, 'public');
+        $path = $this->getAssetPath($path);
 
         return [
             'url' => asset($path),
             'meta' => [
                 'extension' => $extension,
-                'mime' => $mime,
+                'mime' => $this->file->getMimeType(),
             ],
         ];
     }
 
-    public function getBasePath(): string
+    public function getAssetPath(string $path = ''): string
     {
-        $base = '';
-        if (config('filesystems.default') === 'local') {
-            $base = 'storage/';
-        } elseif (config('filesystems.default') === 's3') {
-            $base = 'public/';
+        if (config('filesystems.default') === 's3') {
+            $base = "public/$path";
+        } else {
+            $base = "storage/$path";
         }
 
         return $base;
     }
+
+    public function getStoragePath(string $path = ''): string
+    {
+        return "public/{$path}";
+    }
+
 }

@@ -18,7 +18,6 @@ use Maatwebsite\Excel\Excel;
 trait ExportTrait
 {
     protected ?string $completedJobNotification = null;
-
     protected bool $exportAllShouldQueue = true;
 
     protected function exportQuery(Builder $query): Builder
@@ -40,6 +39,8 @@ trait ExportTrait
 
     public function export(Request $request): Response|JsonResponse
     {
+        $this->can($this->getExportAbility());
+
         $validated = $request->validate([
             'type' => 'nullable|in:excel,csv,html',
             'target' => 'nullable|in:all,page',
@@ -55,7 +56,6 @@ trait ExportTrait
         };
         $fileName = Str::snake(Str::pluralStudly(class_basename($this->model)));
         $fileName = sprintf('%s_%s.%s', $fileName, $target, strtolower($targetType));
-        $fileUrl = $this->getExportedFilePath($fileName);
 
         if ($target === 'page') {
             $items = $query->simplePaginate()->getCollection();
@@ -68,21 +68,15 @@ trait ExportTrait
         $this->afterExportHook($request);
 
         if ($target === 'all' && $this->exportAllShouldQueue) {
-            $handler->queue("/public/exports/$fileName")->chain([
-                new CompletedExportJob(request()->user(), $fileUrl, $this->completedJobNotification),
+            $storagePath = FileManager::make()->getStoragePath("exports/{$fileName}");
+            $assetPath = FileManager::make()->getAssetPath("exports/{$fileName}");
+            $handler->queue($storagePath)->chain([
+                new CompletedExportJob(request()->user(), $assetPath, $this->completedJobNotification),
             ]);
 
             return $this->success(__('NaiveCrud::messages.exported'));
         }
 
         return $handler->download($fileName);
-    }
-
-    private function getExportedFilePath(string $fileName): string
-    {
-        $base = FileManager::make()->getBasePath();
-        $path = "{$base}/exports/{$fileName}";
-
-        return asset($path);
     }
 }

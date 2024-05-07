@@ -23,6 +23,8 @@ trait IndexTrait
 
     public function index(Request $request): JsonResponse
     {
+        $this->can($this->getIndexAbility());
+
         $this->beforeIndexHook($request);
         $query = $this->model::query();
         $query = $this->globalQuery($query);

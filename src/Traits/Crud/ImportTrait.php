@@ -12,6 +12,8 @@ trait ImportTrait
 {
     public function import(Request $request): JsonResponse
     {
+        $this->can($this->getImportAbility());
+
         $validated = $request->validate(['file' => 'required|string']);
         $file = $validated['file'];
 
@@ -25,6 +27,8 @@ trait ImportTrait
 
     public function importTemplate(Request $request): JsonResponse
     {
+        $this->can($this->getImportAbility());
+
         $name = Str::snake(Str::pluralStudly(class_basename($this->model)));
         if (method_exists($this->model, 'importFields')) {
             $sample = $this->model::importFields()->mapWithKeys(fn ($name) => [$name => $name])->toArray();

@@ -14,6 +14,7 @@ trait DeleteTrait
         $query = $this->globalQuery($query);
 
         $item = $query->findOrFail($id);
+        $this->can($this->getDeleteAbility(), $item);
 
         $this->beforeDeleteHook($request, $item);
         $item->delete();
@@ -24,6 +25,8 @@ trait DeleteTrait
 
     public function bulkDestroy(Request $request): JsonResponse
     {
+        $this->can($this->getDeleteAbility());
+
         $validated = $request->validate([
             'resources' => 'required|array|min:1',
             'resources.*' => 'required|integer',
