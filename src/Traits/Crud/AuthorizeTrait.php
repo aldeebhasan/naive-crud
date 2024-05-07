@@ -5,24 +5,34 @@ namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 trait AuthorizeTrait
 {
     protected bool $authorize = true;
+
     protected string|array $indexAbility = 'index';
+
     protected string|array $showAbility = 'show';
+
     protected string|array $createAbility = 'create';
+
     protected string|array $updateAbility = 'update';
+
     protected string|array $deleteAbility = 'delete';
+
     protected string|array $restoreAbility = 'restore';
+
     protected string|array $forceDeleteAbility = 'forceDelete';
+
     protected string|array $importAbility = 'import';
+
     protected string|array $exportAbility = 'export';
 
     protected function can(string|array $ability, $model = null): bool
     {
-        if ($this->authorize && !empty($ability)) {
+        if ($this->authorize && ! empty($ability)) {
             if (auth()->user()->can($ability, $model ?? $this->model)) {
                 return true;
             }
             abort(403);
         }
+
         return true;
     }
 
@@ -97,5 +107,4 @@ trait AuthorizeTrait
     {
         return $this->exportAbility;
     }
-
 }

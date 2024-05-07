@@ -15,6 +15,7 @@ use Aldeebhasan\NaiveCrud\Traits\Crud\ResponseTrait;
 use Aldeebhasan\NaiveCrud\Traits\Crud\SearchTrait;
 use Aldeebhasan\NaiveCrud\Traits\Crud\ShowTrait;
 use Aldeebhasan\NaiveCrud\Traits\Crud\StoreTrait;
+use Aldeebhasan\NaiveCrud\Traits\Crud\ToggleTrait;
 use Aldeebhasan\NaiveCrud\Traits\Crud\UpdateTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User;
@@ -23,7 +24,7 @@ use Illuminate\Routing\Controller;
 abstract class CrudController extends Controller
 {
     use IndexTrait, ShowTrait, StoreTrait, UpdateTrait, ResponseTrait, SearchTrait,
-        HooksTrait, DeleteTrait, ImportTrait, ExportTrait, AuthorizeTrait;
+        HooksTrait, DeleteTrait, ImportTrait, ExportTrait, AuthorizeTrait,ToggleTrait;
 
     protected string $model;
 

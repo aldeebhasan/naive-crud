@@ -28,6 +28,8 @@ use Illuminate\Http\Request;
  * @method  afterBulkUpdateHook(Request $request)
  * @method  beforeBulkDeleteHook(Request $request)
  * @method  afterBulkDeleteHook(Request $request)
+ * @method  beforeToggleHook(Request $request)
+ * @method  afterToggleHook(Request $request)
  */
 trait HooksTrait
 {

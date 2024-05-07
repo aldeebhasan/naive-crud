@@ -14,8 +14,8 @@ class FileManager
     protected string $path = '';
 
     protected string $fileName = '';
-    protected UploadedFile $file;
 
+    protected UploadedFile $file;
 
     public function setFile(UploadedFile $file): self
     {
@@ -50,7 +50,7 @@ class FileManager
             $image = $image->cover($width, $width);
             $encoded = $image->encodeByExtension($extension, quality: 75)->toString();
 
-            $thumbnailName = 'thumbnails/' . pathinfo($response['url'], PATHINFO_FILENAME);
+            $thumbnailName = 'thumbnails/'.pathinfo($response['url'], PATHINFO_FILENAME);
             $this->upload($encoded, $thumbnailName, $extension);
         }
 
@@ -67,7 +67,7 @@ class FileManager
 
     private function upload(string $file, string $name = '', string $extension = ''): array
     {
-        $name = $name ?: (time() . uniqid());
+        $name = $name ?: (time().uniqid());
         $name = "$name.$extension";
         $path = "$this->path/$name";
         Storage::put($this->getStoragePath($path), $file, 'public');
@@ -97,5 +97,4 @@ class FileManager
     {
         return "public/{$path}";
     }
-
 }

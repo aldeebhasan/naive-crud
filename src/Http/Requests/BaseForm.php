@@ -41,7 +41,7 @@ class BaseForm extends FormRequest
         if ($this->route()->getActionMethod() === 'toggle') {
             return array_merge(
                 [
-                    'resources' => 'present',
+                    'resources' => ['array', 'required'],
                 ],
                 $this->toggleRules()
             );

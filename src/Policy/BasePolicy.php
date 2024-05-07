@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class BasePolicy
 {
-
     protected string $key;
+
     protected string $keyDelimiter = '_';
 
     public function __construct()
     {
-        if (!isset($this->key)) {
+        if (! isset($this->key)) {
             $modelClass = class_basename(static::class);
             $modelClass = str_replace('Policy', '', $modelClass);
             $modelClass = str($modelClass)->plural()->snake($this->keyDelimiter)->toString();
@@ -30,7 +30,7 @@ class BasePolicy
      */
     public function index(Model $user): bool
     {
-        return $this->checkIfCan("index", $user);
+        return $this->checkIfCan('index', $user);
     }
 
     /**
@@ -48,7 +48,7 @@ class BasePolicy
      */
     public function create(Model $user): bool
     {
-        return $this->checkIfCan("create", $user);
+        return $this->checkIfCan('create', $user);
     }
 
     /**
@@ -63,7 +63,6 @@ class BasePolicy
         return $this->checkIfCan('update', $user, $model);
     }
 
-
     /**
      * Determine whether the user can delete the model.
      *
@@ -75,7 +74,6 @@ class BasePolicy
     {
         return $this->checkIfCan('delete', $user, $model);
     }
-
 
     /**
      * Determine whether the user can restore the model.
@@ -109,9 +107,8 @@ class BasePolicy
      */
     public function export(Model $user): bool
     {
-        return $this->checkIfCan("export", $user);
+        return $this->checkIfCan('export', $user);
     }
-
 
     /**
      * Determine whether the user can import the models.
@@ -121,7 +118,7 @@ class BasePolicy
      */
     public function import(Model $user): bool
     {
-        return $this->checkIfCan("import", $user);
+        return $this->checkIfCan('import', $user);
     }
 
     public function doesOwnItem(Model $user, mixed $model = null): bool
@@ -131,7 +128,8 @@ class BasePolicy
 
     protected function checkIfCan(string $action, Model $user, mixed $model = null, string $key = null): bool
     {
-        $policyKey = sprintf("%s_%s", $action, $this->getKey($key, $model));
+        $policyKey = sprintf('%s_%s', $action, $this->getKey($key, $model));
+
         return $user->can($policyKey) && $this->doesOwnItem($user, $model);
     }
 
@@ -139,5 +137,4 @@ class BasePolicy
     {
         return $key ?? $this->key;
     }
-
 }

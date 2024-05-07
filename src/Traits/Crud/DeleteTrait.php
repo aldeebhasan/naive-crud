@@ -34,10 +34,9 @@ trait DeleteTrait
         $query = $this->model::query();
         $query = $this->globalQuery($query);
 
-        $key = (new $this->model)->getKey();
         $this->beforeBulkDeleteHook($request);
         $ids = $validated['resources'];
-        $count = $query->whereIn($key, $ids)->delete();
+        $count = $query->whereKey($ids)->delete();
         $this->afterBulkDeleteHook($request);
 
         return $this->success(__('NaiveCrud::messages.bulk-deleted', ['count' => $count]));

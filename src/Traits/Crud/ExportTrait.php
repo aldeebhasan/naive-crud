@@ -18,6 +18,7 @@ use Maatwebsite\Excel\Excel;
 trait ExportTrait
 {
     protected ?string $completedJobNotification = null;
+
     protected bool $exportAllShouldQueue = true;
 
     protected function exportQuery(Builder $query): Builder
