@@ -5,9 +5,9 @@ namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 use Aldeebhasan\NaiveCrud\Export\ModelCollectionExport;
 use Aldeebhasan\NaiveCrud\Export\ModelQueryExport;
 use Aldeebhasan\NaiveCrud\Jobs\CompletedExportJob;
-use Aldeebhasan\NaiveCrud\Lib\FileManager;
-use Aldeebhasan\NaiveCrud\Lib\FilterManager;
-use Aldeebhasan\NaiveCrud\Lib\SortManager;
+use Aldeebhasan\NaiveCrud\Logic\Managers\FileManager;
+use Aldeebhasan\NaiveCrud\Logic\Resolvers\FilterResolver;
+use Aldeebhasan\NaiveCrud\Logic\Resolvers\SortResolver;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -29,11 +29,11 @@ trait ExportTrait
     private function prepareExportQuery(Request $request): Builder
     {
         $query = $this->model::query();
-        $query = $this->globalQuery($query);
+        $query = $this->baseQuery($query);
         $query = $this->exportQuery($query);
 
-        FilterManager::make($request)->setFilters($this->filters)->apply($query);
-        SortManager::make($request)->setSorters($this->sorters)->apply($query);
+        FilterResolver::make($request)->setFilters($this->filters)->apply($query);
+        SortResolver::make($request)->setSorters($this->sorters)->apply($query);
 
         return $query;
     }

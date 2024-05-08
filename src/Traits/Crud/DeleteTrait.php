@@ -11,7 +11,7 @@ trait DeleteTrait
     {
 
         $query = $this->model::query();
-        $query = $this->globalQuery($query);
+        $query = $this->baseQuery($query);
 
         $item = $query->findOrFail($id);
         $this->can($this->getDeleteAbility(), $item);
@@ -32,7 +32,7 @@ trait DeleteTrait
             'resources.*' => 'required|integer',
         ]);
         $query = $this->model::query();
-        $query = $this->globalQuery($query);
+        $query = $this->baseQuery($query);
 
         $this->beforeBulkDeleteHook($request);
         $ids = $validated['resources'];

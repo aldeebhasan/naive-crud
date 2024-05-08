@@ -2,9 +2,9 @@
 
 namespace Aldeebhasan\NaiveCrud\Http\Controllers;
 
-use _PHPStan_e956fad2e\Symfony\Component\Console\Exception\LogicException;
 use Aldeebhasan\NaiveCrud\Contracts\FilterUI;
 use Aldeebhasan\NaiveCrud\Contracts\SortUI;
+use Aldeebhasan\NaiveCrud\Logic\Resolvers\ComponentResolver;
 use Aldeebhasan\NaiveCrud\Traits\Crud\AuthorizeTrait;
 use Aldeebhasan\NaiveCrud\Traits\Crud\DeleteTrait;
 use Aldeebhasan\NaiveCrud\Traits\Crud\ExportTrait;
@@ -21,14 +21,14 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Routing\Controller;
 
-abstract class CrudController extends Controller
+abstract class BaseController extends Controller
 {
     use IndexTrait, ShowTrait, StoreTrait, UpdateTrait, ResponseTrait, SearchTrait,
-        HooksTrait, DeleteTrait, ImportTrait, ExportTrait, AuthorizeTrait,ToggleTrait;
+        HooksTrait, DeleteTrait, ImportTrait, ExportTrait, AuthorizeTrait, ToggleTrait;
 
     protected string $model;
 
-    protected string $modelForm;
+    protected string $modelRequestForm;
 
     protected string $modelResource;
 
@@ -44,14 +44,26 @@ abstract class CrudController extends Controller
 
     public function __construct()
     {
+        $this->resolveComponents();
+
         $this->middleware(function ($request, $next) {
             $this->user = auth()->user();
             $this->afterConstructHook($this);
 
             return $next($request);
         });
+    }
 
-        throw_if(empty($this->model), LogicException::class, 'Model need to be defined');
+    private function resolveComponents(): void
+    {
+        throw_if(
+            empty($this->model),
+            \LogicException::class, 'Model need to be defined'
+        );
+
+        $componentResolver = ComponentResolver::make($this->model);
+        $this->modelRequestForm = $componentResolver->resolveRequestForm($this->modelRequestForm);
+        $this->modelResource = $componentResolver->resolveModelResource($this->modelResource);
     }
 
     public function afterConstructHook(self $instance): void
@@ -59,7 +71,7 @@ abstract class CrudController extends Controller
         // do what you want
     }
 
-    public function globalQuery(Builder $query): Builder
+    public function baseQuery(Builder $query): Builder
     {
         return $query;
     }

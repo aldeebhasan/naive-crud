@@ -15,12 +15,12 @@ trait UpdateTrait
     {
 
         /** @var FormRequest $form */
-        $form = app($this->modelForm);
+        $form = app($this->modelRequestForm);
         $data = $form->validated();
         $data = array_merge($data, $this->extraUpdateData());
 
         $query = $this->model::query();
-        $query = $this->globalQuery($query);
+        $query = $this->baseQuery($query);
 
         $item = $query->findOrFail($id);
         $this->can($this->getUpdateAbility(), $item);
@@ -38,11 +38,11 @@ trait UpdateTrait
     {
         $this->can($this->getUpdateAbility());
         /** @var BaseForm $form */
-        $form = app($this->modelForm);
+        $form = app($this->modelRequestForm);
         $data = $form->validated();
 
         $query = $this->model::query();
-        $query = $this->globalQuery($query);
+        $query = $this->baseQuery($query);
 
         $this->beforeBulkUpdateHook($request);
         $count = 0;

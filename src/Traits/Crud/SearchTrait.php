@@ -3,8 +3,8 @@
 namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
 use Aldeebhasan\NaiveCrud\Http\Resources\BaseResource;
-use Aldeebhasan\NaiveCrud\Lib\FilterManager;
-use Aldeebhasan\NaiveCrud\Lib\SortManager;
+use Aldeebhasan\NaiveCrud\Logic\Resolvers\FilterResolver;
+use Aldeebhasan\NaiveCrud\Logic\Resolvers\SortResolver;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
@@ -26,11 +26,11 @@ trait SearchTrait
         $value = $request->get($this->searchKeyword);
         $this->beforeSearchHook($request);
         $query = $this->model::query();
-        $query = $this->globalQuery($query);
+        $query = $this->baseQuery($query);
         $query = $this->searchQuery($query, $value);
 
-        FilterManager::make($request)->setFilters($this->filters)->apply($query);
-        SortManager::make($request)->setSorters($this->sorters)->apply($query);
+        FilterResolver::make($request)->setFilters($this->filters)->apply($query);
+        SortResolver::make($request)->setSorters($this->sorters)->apply($query);
 
         $items = $query->paginate($this->getLimit());
 

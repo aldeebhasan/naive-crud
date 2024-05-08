@@ -19,7 +19,7 @@ trait ShowTrait
     {
 
         $query = $this->model::query();
-        $query = $this->globalQuery($query);
+        $query = $this->baseQuery($query);
         $query = $this->showQuery($query);
 
         $item = $query->findOrFail($id);

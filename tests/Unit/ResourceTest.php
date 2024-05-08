@@ -2,13 +2,10 @@
 
 namespace Aldeebhasan\NaiveCrud\Test\Unit;
 
-use Aldeebhasan\NaiveCrud\Http\Resources\BaseResource;
-use Aldeebhasan\NaiveCrud\Lib\FileManager;
+use Aldeebhasan\NaiveCrud\Logic\Managers\FileManager;
 use Aldeebhasan\NaiveCrud\Test\TestCase;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ResourceTest extends TestCase

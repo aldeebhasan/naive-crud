@@ -1,6 +1,6 @@
 <?php
 
-namespace Aldeebhasan\NaiveCrud\Lib;
+namespace Aldeebhasan\NaiveCrud\Logic\Managers;
 
 use Aldeebhasan\NaiveCrud\Traits\Makable;
 use Illuminate\Http\UploadedFile;

@@ -11,11 +11,11 @@ trait ToggleTrait
     {
         $this->can($this->getUpdateAbility());
         /** @var BaseForm $form */
-        $form = app($this->modelForm);
+        $form = app($this->modelRequestForm);
         $data = $form->validated();
 
         $query = $this->model::query();
-        $query = $this->globalQuery($query);
+        $query = $this->baseQuery($query);
 
         $this->beforeToggleHook($request);
 

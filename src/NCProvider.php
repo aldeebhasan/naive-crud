@@ -2,7 +2,7 @@
 
 namespace Aldeebhasan\NaiveCrud;
 
-use Aldeebhasan\NaiveCrud\Lib\RouteManager;
+use Aldeebhasan\NaiveCrud\Logic\Managers\RouteManager;
 use Illuminate\Support\ServiceProvider;
 
 class NCProvider extends ServiceProvider

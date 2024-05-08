@@ -1,6 +1,6 @@
 <?php
 
-namespace Aldeebhasan\NaiveCrud\Lib;
+namespace Aldeebhasan\NaiveCrud\Logic\Resolvers;
 
 use Aldeebhasan\NaiveCrud\Contracts\SortUI;
 use Aldeebhasan\NaiveCrud\Traits\Makable;
@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
-/**@method  static SortManager make(Request $request) */
-class SortManager
+/**@method  static SortResolver make(Request $request) */
+class SortResolver
 {
     use Makable;
 
@@ -21,7 +21,7 @@ class SortManager
 
     /**
      * @param SortUI|array<SortUI> $sorts
-     * @return SortManager
+     * @return SortResolver
      */
     public function setSorters(SortUI|array $sorts): self
     {

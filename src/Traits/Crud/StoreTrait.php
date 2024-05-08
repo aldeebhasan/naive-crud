@@ -14,7 +14,7 @@ trait StoreTrait
     {
         $this->can($this->getCreateAbility());
         /** @var BaseForm $form */
-        $form = app($this->modelForm);
+        $form = app($this->modelRequestForm);
         $data = $form->validated();
         $data = array_merge($data, $this->extraStoreData());
 
@@ -34,7 +34,7 @@ trait StoreTrait
         $this->can($this->getCreateAbility());
 
         /** @var BaseForm $form */
-        $form = app($this->modelForm);
+        $form = app($this->modelRequestForm);
         $data = $form->validated();
 
         $this->beforeBulkStoreHook($request);
