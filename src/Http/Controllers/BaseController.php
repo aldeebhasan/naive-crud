@@ -58,7 +58,8 @@ abstract class BaseController extends Controller
     {
         throw_if(
             empty($this->model),
-            \LogicException::class, 'Model need to be defined'
+            \LogicException::class,
+            'Model need to be defined'
         );
 
         $componentResolver = ComponentResolver::make($this->model);

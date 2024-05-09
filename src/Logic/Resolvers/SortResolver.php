@@ -3,6 +3,7 @@
 namespace Aldeebhasan\NaiveCrud\Logic\Resolvers;
 
 use Aldeebhasan\NaiveCrud\Contracts\SortUI;
+use Aldeebhasan\NaiveCrud\DTO\SortField;
 use Aldeebhasan\NaiveCrud\Traits\Makable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -35,7 +36,6 @@ class SortResolver
         foreach ($this->sorts as $sort) {
             $fields = $sort->fields();
             $this->handleFields($query, $fields);
-
         }
 
         return $query;
@@ -43,26 +43,12 @@ class SortResolver
 
     private function handleFields(Builder $query, array $fields): void
     {
-        /*
-         * $field = [
-         *           'field'=>'param',                     // (required)
-         *           'column'=>'column',                   // default: $field['field'] (optional)
-         *           'direction'=>'asc|desc',               // default: desc
-         *           'callback'=>'fn($query, $value)=>{}', // custom function (optional)
-         *        ]
-         */
+        /** @var SortField $field */
         foreach ($fields as $field) {
-
-            $param = $field['field'];
-            $value = $field['value'] ?? $this->request->get($param);
-            $column = $field['column'] ?? $param;
-            $direction = $field['direction'] ?? 'desc';
-            $callback = $field['callback'] ?? null;
-
-            if (! empty($callback) && is_callable($callback)) {
-                call_user_func($callback, $query, $value);
+            if (! empty($field->callback) && is_callable($field->callback)) {
+                call_user_func($field->callback, $query);
             } else {
-                $query->orderBy($column, $direction);
+                $query->orderBy($field->column, $field->direction);
             }
         }
 

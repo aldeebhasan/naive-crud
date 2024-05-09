@@ -49,7 +49,7 @@ class FilterResolver
      */
     private function handleFields(Builder $query, array $fields): void
     {
-        /**@var FilterField $field*/
+        /** @var FilterField $field */
         foreach ($fields as $field) {
 
             $value = $field->value ?? $this->request->get($field->field);
