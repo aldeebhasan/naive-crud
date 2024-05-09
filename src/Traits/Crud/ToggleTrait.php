@@ -15,8 +15,7 @@ trait ToggleTrait
 
         $data = $request->validated();
 
-        $query = $this->model::query();
-        $query = $this->baseQuery($query);
+        $query = $this->baseQueryResolver($request)->build();
 
         $this->beforeToggleHook($request);
 

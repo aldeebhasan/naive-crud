@@ -18,9 +18,9 @@ trait ShowTrait
     public function show(Request $request, $id): JsonResponse
     {
 
-        $query = $this->model::query();
-        $query = $this->baseQuery($query);
-        $query = $this->showQuery($query);
+        $query = $this->baseQueryResolver($request)
+            ->setExtendQuery($this->showQuery(...))
+            ->build();
 
         $item = $query->findOrFail($id);
         $this->can($this->getShowAbility(), $item);

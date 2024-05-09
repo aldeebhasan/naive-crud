@@ -10,8 +10,7 @@ trait DeleteTrait
     public function destroy(Request $request, $id): JsonResponse
     {
 
-        $query = $this->model::query();
-        $query = $this->baseQuery($query);
+        $query = $this->baseQueryResolver($request)->build();
 
         $item = $query->findOrFail($id);
         $this->can($this->getDeleteAbility(), $item);
@@ -31,8 +30,8 @@ trait DeleteTrait
             'resources' => 'required|array|min:1',
             'resources.*' => 'required|integer',
         ]);
-        $query = $this->model::query();
-        $query = $this->baseQuery($query);
+
+        $query = $this->baseQueryResolver($request)->build();
 
         $this->beforeBulkDeleteHook($request);
         $ids = $validated['resources'];

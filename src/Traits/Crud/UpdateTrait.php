@@ -38,8 +38,7 @@ trait UpdateTrait
 
         $data = $request->validated();
 
-        $query = $this->model::query();
-        $query = $this->baseQuery($query);
+        $query = $this->baseQueryResolver($request)->build();
 
         $this->beforeBulkUpdateHook($request);
         $count = 0;

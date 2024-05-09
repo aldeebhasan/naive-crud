@@ -2,6 +2,7 @@
 
 namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
+use Aldeebhasan\NaiveCrud\Http\Requests\BaseRequest;
 use Aldeebhasan\NaiveCrud\Import\ModelImport;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -10,11 +11,12 @@ use Maatwebsite\Excel\Facades\Excel;
 
 trait ImportTrait
 {
+    /** @param BaseRequest $request */
     public function import(Request $request): JsonResponse
     {
         $this->can($this->getImportAbility());
 
-        $validated = $request->validate(['file' => 'required|string']);
+        $validated = $request->validated();
         $file = $validated['file'];
 
         $this->beforeImportHook($request);

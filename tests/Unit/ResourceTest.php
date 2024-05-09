@@ -3,8 +3,10 @@
 namespace Aldeebhasan\NaiveCrud\Test\Unit;
 
 use Aldeebhasan\NaiveCrud\Logic\Managers\FileManager;
+use Aldeebhasan\NaiveCrud\Logic\Resolvers\QueryResolver;
 use Aldeebhasan\NaiveCrud\Test\TestCase;
 use Carbon\Language;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -21,11 +23,21 @@ class ResourceTest extends TestCase
         FileManager::make()->setPath("images")->uploadImage($file);
     }
 
+    protected function indexQuery(Builder $query): Builder
+    {
+        return $query->where('id',10);
+    }
+
+    protected function searchQuery(Builder $query, string $value): Builder
+    {
+        return $query->where('name',$value);
+    }
+
     function test_resourse2()
     {
-        request()->merge(['username' => 'hasan', 'name' => 'alu']);
-        $x = app(Req::class);
-        dd($x->validated());
+        $query = QueryResolver::make(request(), TestModel::class, $this->indexQuery(...))
+            ->setExtendQuery($this->searchQuery(...),"2")
+            ->build()->dd();
     }
 
 
@@ -33,6 +45,7 @@ class ResourceTest extends TestCase
 
 class TestModel extends Model
 {
+    protected $table ='products';
 
 }
 

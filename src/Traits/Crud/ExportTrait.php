@@ -4,10 +4,9 @@ namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
 use Aldeebhasan\NaiveCrud\Export\ModelCollectionExport;
 use Aldeebhasan\NaiveCrud\Export\ModelQueryExport;
+use Aldeebhasan\NaiveCrud\Http\Requests\BaseRequest;
 use Aldeebhasan\NaiveCrud\Jobs\CompletedExportJob;
 use Aldeebhasan\NaiveCrud\Logic\Managers\FileManager;
-use Aldeebhasan\NaiveCrud\Logic\Resolvers\FilterResolver;
-use Aldeebhasan\NaiveCrud\Logic\Resolvers\SortResolver;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -26,29 +25,19 @@ trait ExportTrait
         return $this->indexQuery($query);
     }
 
-    private function prepareExportQuery(Request $request): Builder
-    {
-        $query = $this->model::query();
-        $query = $this->baseQuery($query);
-        $query = $this->exportQuery($query);
-
-        FilterResolver::make($request)->setFilters($this->filters)->apply($query);
-        SortResolver::make($request)->setSorters($this->sorters)->apply($query);
-
-        return $query;
-    }
-
+    /** @param BaseRequest $request */
     public function export(Request $request): Response|JsonResponse
     {
         $this->can($this->getExportAbility());
 
-        $validated = $request->validate([
-            'type' => 'nullable|in:excel,csv,html',
-            'target' => 'nullable|in:all,page',
-        ]);
+        $validated = $request->validated();
 
         $this->beforeExportHook($request);
-        $query = $this->prepareExportQuery($request);
+
+        $query = $this->fullQueryResolver($request)
+            ->setExtendQuery($this->exportQuery(...))
+            ->build();
+
         $target = $validated['target'] ?? 'page';
         $targetType = match ($validated['type'] ?? 'csv') {
             'excel' => Excel::XLSX,

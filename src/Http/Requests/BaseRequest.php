@@ -2,10 +2,15 @@
 
 namespace Aldeebhasan\NaiveCrud\Http\Requests;
 
+use Aldeebhasan\NaiveCrud\Traits\Reqest\StoreRequestTrait;
+use Aldeebhasan\NaiveCrud\Traits\Reqest\ToggleRequestTrait;
+use Aldeebhasan\NaiveCrud\Traits\Reqest\UpdateRequestTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BaseRequest extends FormRequest
 {
+    use StoreRequestTrait, UpdateRequestTrait, ToggleRequestTrait;
+
     public function authorize(): bool
     {
         return true;
@@ -41,7 +46,7 @@ class BaseRequest extends FormRequest
         if ($this->route()->getActionMethod() === 'bulkDestroy') {
             return [
                 'resources' => 'required|array|min:1',
-                'resources.*' => 'required|integer',
+                'resources.*' => 'required',
             ];
         }
 
@@ -49,10 +54,22 @@ class BaseRequest extends FormRequest
             return array_merge(
                 [
                     'resources' => 'required|array|min:1',
-                    'resources.*' => 'required|integer',
+                    'resources.*' => 'required',
                 ],
                 $this->toggleRules()
             );
+        }
+
+        if ($this->route()->getActionMethod() === 'export') {
+            return [
+                'type' => 'nullable|in:excel,csv,html',
+                'target' => 'nullable|in:all,page',
+            ];
+        }
+        if ($this->route()->getActionMethod() === 'import') {
+            return [
+                'file' => 'required|string',
+            ];
         }
 
         return [];
@@ -92,26 +109,6 @@ class BaseRequest extends FormRequest
         return [];
     }
 
-    /**
-     * Default rules for the request.
-     *
-     * @return array
-     */
-    public function commonRules(): array
-    {
-        return [];
-    }
-
-    /**
-     * Rules for the "store" (POST) endpoint.
-     *
-     * @return array
-     */
-    public function storeRules(): array
-    {
-        return [];
-    }
-
     protected function buildBulkRules(array $definedRules, array $definedBatchRules): array
     {
         $batchRules = [
@@ -128,107 +125,17 @@ class BaseRequest extends FormRequest
     }
 
     /**
-     * Rules for the "batch store" (POST) endpoint.
-     *
-     * @return array
+     * Default rules for the request.
      */
-    public function bulkStoreRules(): array
-    {
-        return [];
-    }
-
-    /**
-     * Rules for the "update" (PATCH|PUT) endpoint.
-     *
-     * @return array
-     */
-    public function updateRules(): array
-    {
-        return [];
-    }
-
-    /**
-     * Rules for the "batch update" (PATCH|PUT) endpoint.
-     *
-     * @return array
-     */
-    public function bulkUpdateRules(): array
-    {
-        return [];
-    }
-
-    /**
-     * Rules for the "associate" endpoint.
-     *
-     * @return array
-     */
-
-    /**
-     * Rules for the "toggle" endpoint.
-     *
-     * @return array
-     */
-    public function toggleRules(): array
+    public function commonRules(): array
     {
         return [];
     }
 
     /**
      * Default messages for the request.
-     *
-     * @return array
      */
     public function commonMessages(): array
-    {
-        return [];
-    }
-
-    /**
-     * Messages for the "store" (POST) endpoint.
-     *
-     * @return array
-     */
-    public function storeMessages(): array
-    {
-        return [];
-    }
-
-    /**
-     * Messages for the "bulkStore" (POST) endpoint.
-     *
-     * @return array
-     */
-    public function bulkStoreMessages(): array
-    {
-        return [];
-    }
-
-    /**
-     * Messages for the "update" (PUT) endpoint.
-     *
-     * @return array
-     */
-    public function updateMessages(): array
-    {
-        return [];
-    }
-
-    /**
-     * Messages for the "batchUpdate" (PUT) endpoint.
-     *
-     * @return array
-     */
-    public function bulkUpdateMessages(): array
-    {
-        return [];
-    }
-
-    /**
-     * Messages for the "toggle" (PUT) endpoint.
-     *
-     * @return array
-     */
-    public function toggleMessages(): array
     {
         return [];
     }

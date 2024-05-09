@@ -17,6 +17,7 @@ use Aldeebhasan\NaiveCrud\Traits\Crud\ShowTrait;
 use Aldeebhasan\NaiveCrud\Traits\Crud\StoreTrait;
 use Aldeebhasan\NaiveCrud\Traits\Crud\ToggleTrait;
 use Aldeebhasan\NaiveCrud\Traits\Crud\UpdateTrait;
+use Aldeebhasan\NaiveCrud\Traits\QueryResolverTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Routing\Controller;
@@ -24,7 +25,8 @@ use Illuminate\Routing\Controller;
 abstract class BaseController extends Controller
 {
     use IndexTrait, ShowTrait, StoreTrait, UpdateTrait, ResponseTrait, SearchTrait,
-        HooksTrait, DeleteTrait, ImportTrait, ExportTrait, AuthorizeTrait, ToggleTrait;
+        HooksTrait, DeleteTrait, ImportTrait, ExportTrait, AuthorizeTrait, ToggleTrait,
+        QueryResolverTrait;
 
     protected string $model;
 
@@ -48,7 +50,14 @@ abstract class BaseController extends Controller
 
     public function __construct()
     {
+        throw_if(
+            empty($this->model),
+            \LogicException::class,
+            'Model need to be defined'
+        );
+
         $this->componentsResolver = ComponentResolver::make($this->model);
+
         $this->resolveComponents();
         $this->bindComponents();
 
@@ -62,11 +71,6 @@ abstract class BaseController extends Controller
 
     private function resolveComponents(): void
     {
-        throw_if(
-            empty($this->model),
-            \LogicException::class,
-            'Model need to be defined'
-        );
 
         $this->modelRequestForm = $this->componentsResolver->resolveRequestForm($this->modelRequestForm);
         $this->modelResource = $this->componentsResolver->resolveModelResource($this->modelResource);
