@@ -4,7 +4,7 @@ namespace Aldeebhasan\NaiveCrud\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BaseForm extends FormRequest
+class BaseRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -38,10 +38,18 @@ class BaseForm extends FormRequest
             return $this->buildBulkRules($this->updateRules(), $this->bulkUpdateRules());
         }
 
+        if ($this->route()->getActionMethod() === 'bulkDestroy') {
+            return [
+                'resources' => 'required|array|min:1',
+                'resources.*' => 'required|integer',
+            ];
+        }
+
         if ($this->route()->getActionMethod() === 'toggle') {
             return array_merge(
                 [
-                    'resources' => ['array', 'required'],
+                    'resources' => 'required|array|min:1',
+                    'resources.*' => 'required|integer',
                 ],
                 $this->toggleRules()
             );
@@ -186,7 +194,7 @@ class BaseForm extends FormRequest
     }
 
     /**
-     * Messages for the "batchstore" (POST) endpoint.
+     * Messages for the "bulkStore" (POST) endpoint.
      *
      * @return array
      */
@@ -196,7 +204,7 @@ class BaseForm extends FormRequest
     }
 
     /**
-     * Messages for the "update" (POST) endpoint.
+     * Messages for the "update" (PUT) endpoint.
      *
      * @return array
      */
@@ -206,7 +214,7 @@ class BaseForm extends FormRequest
     }
 
     /**
-     * Messages for the "batchUpdate" (POST) endpoint.
+     * Messages for the "batchUpdate" (PUT) endpoint.
      *
      * @return array
      */
@@ -216,7 +224,7 @@ class BaseForm extends FormRequest
     }
 
     /**
-     * Messages for the "toggle" endpoint.
+     * Messages for the "toggle" (PUT) endpoint.
      *
      * @return array
      */

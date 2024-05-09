@@ -2,7 +2,7 @@
 
 namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
-use Aldeebhasan\NaiveCrud\Http\Requests\BaseForm;
+use Aldeebhasan\NaiveCrud\Http\Requests\BaseRequest;
 use Aldeebhasan\NaiveCrud\Http\Resources\BaseResource;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
@@ -10,12 +10,11 @@ use Illuminate\Http\Request;
 
 trait StoreTrait
 {
+    /** @param BaseRequest $request */
     public function store(Request $request): JsonResponse
     {
         $this->can($this->getCreateAbility());
-        /** @var BaseForm $form */
-        $form = app($this->modelRequestForm);
-        $data = $form->validated();
+        $data = $request->validated();
         $data = array_merge($data, $this->extraStoreData());
 
         $item = new $this->model($data);
@@ -29,13 +28,11 @@ trait StoreTrait
         return $this->success(__('NaiveCrud::messages.stored'), $data, 201);
     }
 
+    /** @param BaseRequest $request */
     public function bulkStore(Request $request): JsonResponse
     {
         $this->can($this->getCreateAbility());
-
-        /** @var BaseForm $form */
-        $form = app($this->modelRequestForm);
-        $data = $form->validated();
+        $data = $request->validated();
 
         $this->beforeBulkStoreHook($request);
         $count = 0;

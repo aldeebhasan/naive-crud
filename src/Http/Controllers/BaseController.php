@@ -28,11 +28,15 @@ abstract class BaseController extends Controller
 
     protected string $model;
 
+    protected ?string $policy;
+
     protected string $modelRequestForm;
 
     protected string $modelResource;
 
     protected ?User $user;
+
+    protected ComponentResolver $componentsResolver;
 
     /**
      * @var array<FilterUI>$ filters
@@ -44,7 +48,9 @@ abstract class BaseController extends Controller
 
     public function __construct()
     {
+        $this->componentsResolver = ComponentResolver::make($this->model);
         $this->resolveComponents();
+        $this->bindComponents();
 
         $this->middleware(function ($request, $next) {
             $this->user = auth()->user();
@@ -62,9 +68,20 @@ abstract class BaseController extends Controller
             'Model need to be defined'
         );
 
-        $componentResolver = ComponentResolver::make($this->model);
-        $this->modelRequestForm = $componentResolver->resolveRequestForm($this->modelRequestForm);
-        $this->modelResource = $componentResolver->resolveModelResource($this->modelResource);
+        $this->modelRequestForm = $this->componentsResolver->resolveRequestForm($this->modelRequestForm);
+        $this->modelResource = $this->componentsResolver->resolveModelResource($this->modelResource);
+    }
+
+    /**
+     * Binds resolved request class to the container.
+     */
+    protected function bindComponents(): void
+    {
+        $this->componentsResolver->bindRequestForm($this->modelRequestForm);
+
+        if (! empty($this->policy)) {
+            $this->componentsResolver->bindPolicy($this->policy);
+        }
     }
 
     public function afterConstructHook(self $instance): void

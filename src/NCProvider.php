@@ -7,7 +7,7 @@ use Illuminate\Support\ServiceProvider;
 
 class NCProvider extends ServiceProvider
 {
-    public function boot()
+    public function boot(): void
     {
         $this->app->bind('RouteManager', RouteManager::class);
         $this->publishes([
@@ -17,7 +17,7 @@ class NCProvider extends ServiceProvider
 
     }
 
-    public function register()
+    public function register(): void
     {
 
         $this->mergeConfigFrom(__DIR__.'/../config/naive-crud.php', 'naive-crud');

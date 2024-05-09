@@ -2,9 +2,12 @@
 
 namespace Aldeebhasan\NaiveCrud\Logic\Resolvers;
 
-use Aldeebhasan\NaiveCrud\Http\Requests\BaseForm;
+use Aldeebhasan\NaiveCrud\Http\Requests\BaseRequest;
 use Aldeebhasan\NaiveCrud\Http\Resources\BaseResource;
 use Aldeebhasan\NaiveCrud\Traits\Makable;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Gate;
 
 /**@method  static ComponentResolver make(string $modelClass) */
 class ComponentResolver
@@ -30,7 +33,7 @@ class ComponentResolver
             return $requestClassName;
         }
 
-        return BaseForm::class;
+        return BaseRequest::class;
     }
 
     public function resolveModelResource(?string $resourceClass = null): string
@@ -38,12 +41,27 @@ class ComponentResolver
         if ($resourceClass && class_exists($resourceClass)) {
             return $resourceClass;
         }
-        $requestClassName = sprintf('%s%s%s', $this->resourceClassesNamespace, class_basename($this->modelClass), 'Resources');
+        $requestClassName = sprintf(
+            '%s%s%s',
+            $this->resourceClassesNamespace,
+            class_basename($this->modelClass),
+            'Resources'
+        );
 
         if (class_exists($requestClassName)) {
             return $requestClassName;
         }
 
         return BaseResource::class;
+    }
+
+    public function bindRequestForm(string $requestClass): void
+    {
+        App::bind(Request::class, $requestClass);
+    }
+
+    public function bindPolicy(string $policy): void
+    {
+        Gate::policy($this->modelClass, $policy);
     }
 }

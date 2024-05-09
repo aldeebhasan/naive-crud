@@ -2,28 +2,25 @@
 
 namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
-use Aldeebhasan\NaiveCrud\Http\Requests\BaseForm;
+use Aldeebhasan\NaiveCrud\Http\Requests\BaseRequest;
 use Aldeebhasan\NaiveCrud\Http\Resources\BaseResource;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 trait UpdateTrait
 {
+    /** @param BaseRequest $request */
     public function update(Request $request, $id): JsonResponse
     {
-
-        /** @var FormRequest $form */
-        $form = app($this->modelRequestForm);
-        $data = $form->validated();
-        $data = array_merge($data, $this->extraUpdateData());
-
         $query = $this->model::query();
         $query = $this->baseQuery($query);
 
         $item = $query->findOrFail($id);
         $this->can($this->getUpdateAbility(), $item);
+
+        $data = $request->validated();
+        $data = array_merge($data, $this->extraUpdateData());
 
         $this->beforeUpdateHook($request, $item);
         $item->update($data);
@@ -34,12 +31,12 @@ trait UpdateTrait
         return $this->success(__('NaiveCrud::messages.updated'), $data, 201);
     }
 
+    /** @param BaseRequest $request */
     public function bulkUpdate(Request $request): JsonResponse
     {
         $this->can($this->getUpdateAbility());
-        /** @var BaseForm $form */
-        $form = app($this->modelRequestForm);
-        $data = $form->validated();
+
+        $data = $request->validated();
 
         $query = $this->model::query();
         $query = $this->baseQuery($query);

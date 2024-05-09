@@ -2,26 +2,27 @@
 
 namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
+use Aldeebhasan\NaiveCrud\Http\Requests\BaseRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 trait ToggleTrait
 {
+    /** @param BaseRequest $request */
     public function toggle(Request $request): JsonResponse
     {
         $this->can($this->getUpdateAbility());
-        /** @var BaseForm $form */
-        $form = app($this->modelRequestForm);
-        $data = $form->validated();
+
+        $data = $request->validated();
 
         $query = $this->model::query();
         $query = $this->baseQuery($query);
 
         $this->beforeToggleHook($request);
 
-        $resources = $data['resources'] ?? [];
+        $ids = $data['resources'] ?? [];
         unset($data['resources']);
-        $count = $query->whereKey($resources)->update($data);
+        $count = $query->whereKey($ids)->update($data);
 
         $this->afterToggleHook($request);
 
