@@ -2,9 +2,12 @@
 
 namespace Aldeebhasan\NaiveCrud\Logic\Resolvers;
 
+use Aldeebhasan\NaiveCrud\Contracts\FilterUI;
+use Aldeebhasan\NaiveCrud\Contracts\SortUI;
 use Aldeebhasan\NaiveCrud\Traits\Makable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 /**@method  static QueryResolver make(string $modelClass, callable $baseQueryFn) */
 class QueryResolver
@@ -34,16 +37,22 @@ class QueryResolver
         $this->query = $this->getModelQuery();
     }
 
-    public function setFilters(array $filters): self
+    /**
+     * @param FilterUI|array<FilterUI> $filters
+     */
+    public function setFilters(FilterUI|array $filters): self
     {
-        $this->filters = $filters;
+        $this->filters = Arr::wrap($filters);
 
         return $this;
     }
 
-    public function setSorters(array $sorters): self
+    /**
+     * @param SortUI|array<SortUI> $sorts
+     */
+    public function setSorters(SortUI|array $sorts): self
     {
-        $this->sorters = $sorters;
+        $this->sorters = Arr::wrap($sorts);
 
         return $this;
     }

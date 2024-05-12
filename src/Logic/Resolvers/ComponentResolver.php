@@ -27,7 +27,12 @@ class ComponentResolver
         if ($requestForm && class_exists($requestForm)) {
             return $requestForm;
         }
-        $requestClassName = sprintf('%s%s%s', $this->requestClassesNamespace, class_basename($this->modelClass), 'Request');
+        $requestClassName = sprintf(
+            '%s%s%s',
+            $this->requestClassesNamespace,
+            class_basename($this->modelClass),
+            'Request'
+        );
 
         if (class_exists($requestClassName)) {
             return $requestClassName;
@@ -45,7 +50,7 @@ class ComponentResolver
             '%s%s%s',
             $this->resourceClassesNamespace,
             class_basename($this->modelClass),
-            'Resources'
+            'Resource'
         );
 
         if (class_exists($requestClassName)) {

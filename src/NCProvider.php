@@ -9,7 +9,7 @@ class NCProvider extends ServiceProvider
 {
     public function boot(): void
     {
-        $this->app->bind('RouteManager', RouteManager::class);
+        $this->app->bind('NCRoute', RouteManager::class);
         $this->publishes([
             __DIR__.'/../config/naive-crud.php' => config_path('naive-crud.php'),
             __DIR__.'/../lang' => lang_path('/vendor/NaiveCrud'),

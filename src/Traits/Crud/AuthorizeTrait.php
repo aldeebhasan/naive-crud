@@ -26,11 +26,11 @@ trait AuthorizeTrait
 
     protected function can(string|array $ability, $model = null): bool
     {
-        if ($this->authorize && ! empty($ability)) {
-            if (auth()->user()->can($ability, $model ?? $this->model)) {
+        if ($this->authorize && !empty($ability)) {
+            if ($this->getUser() && $this->getUser()->can($ability, $model ?? $this->model)) {
                 return true;
             }
-            abort(403);
+            abort(403, __('NaiveCrud::messages.unauthorized'));
         }
 
         return true;

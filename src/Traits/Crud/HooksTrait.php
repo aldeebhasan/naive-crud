@@ -33,11 +33,12 @@ use Illuminate\Http\Request;
  */
 trait HooksTrait
 {
-    public function __call(string $name, array $arguments)
+    public function __call($name, $arguments): mixed
     {
         if (method_exists($this, $name)) {
-            $this->$name(...$arguments);
+            return $this->$name(...$arguments);
         }
-        throw new \BadMethodCallException('Method '.$name.' does not exist.', 400);
+
+        return null;
     }
 }

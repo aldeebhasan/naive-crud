@@ -41,7 +41,7 @@ trait SearchTrait
         $resource = $this->modelResource ?? BaseResource::class;
 
         return [
-            'items' => $resource::collectionCustom($items->items(), $this->user, forSearch: true)->toArray(),
+            'items' => $resource::collectionCustom($items->items(), $this->getUser(), forSearch: true)->toArray(),
             'meta' => [
                 'has_more_page' => $items->hasMorePages(),
             ],

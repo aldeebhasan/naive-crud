@@ -57,6 +57,6 @@ trait StoreTrait
     {
         $resource = $this->modelResource ?? BaseResource::class;
 
-        return $resource::makeCustom($item, $this->user, false)->resolve();
+        return $resource::makeCustom($item, $this->getUser(), false)->resolve();
     }
 }

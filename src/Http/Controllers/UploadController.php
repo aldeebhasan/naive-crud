@@ -8,7 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
-abstract class UploadController extends Controller
+class UploadController extends Controller
 {
     use ResponseTrait;
 

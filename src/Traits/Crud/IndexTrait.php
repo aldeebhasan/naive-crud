@@ -41,7 +41,7 @@ trait IndexTrait
         return $this->success(__('NaiveCrud::messages.success'), $data);
     }
 
-    protected function getLimit(): int
+    protected function getLimit(): ?int
     {
         return request('limit', null);
     }
@@ -65,7 +65,7 @@ trait IndexTrait
 
         if ($this->paginated) {
             return [
-                'items' => $resource::collectionCustom($items->items(), $this->user)->toArray(),
+                'items' => $resource::collectionCustom($items->items(), $this->getUser())->toArray(),
                 'meta' => Arr::except($items->toArray(), [
                     'data', 'first_page_url', 'last_page_url', 'prev_page_url', 'next_page_url', 'links',
                 ]),

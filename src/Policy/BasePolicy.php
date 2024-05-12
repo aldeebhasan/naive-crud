@@ -35,8 +35,6 @@ class BasePolicy
 
     /**
      * Determine whether the user can view the model.
-     *
-     * @param mixed|null $model
      */
     public function show(Model $user, mixed $model = null): bool
     {
@@ -53,10 +51,6 @@ class BasePolicy
 
     /**
      * Determine whether the user can update the model.
-     *
-     * @param Model $user
-     * @param mixed $model
-     * @return bool
      */
     public function update(Model $user, mixed $model = null): bool
     {
@@ -65,10 +59,6 @@ class BasePolicy
 
     /**
      * Determine whether the user can delete the model.
-     *
-     * @param Model $user
-     * @param mixed $model
-     * @return bool
      */
     public function delete(Model $user, mixed $model = null): bool
     {
@@ -77,10 +67,6 @@ class BasePolicy
 
     /**
      * Determine whether the user can restore the model.
-     *
-     * @param mixed $model
-     *
-     * @return mixed
      */
     public function restore(Model $user, mixed $model = null): bool
     {
@@ -89,10 +75,6 @@ class BasePolicy
 
     /**
      * Determine whether the user can permanently delete the post.
-     *
-     * @param mixed $model
-     *
-     * @return mixed
      */
     public function forceDelete(Model $user, mixed $model = null): bool
     {
@@ -101,9 +83,6 @@ class BasePolicy
 
     /**
      * Determine whether the user can export the models.
-     *
-     *
-     * @return mixed
      */
     public function export(Model $user): bool
     {
@@ -112,9 +91,6 @@ class BasePolicy
 
     /**
      * Determine whether the user can import the models.
-     *
-     *
-     * @return mixed
      */
     public function import(Model $user): bool
     {

@@ -21,6 +21,7 @@ use Aldeebhasan\NaiveCrud\Traits\QueryResolverTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\App;
 
 abstract class BaseController extends Controller
 {
@@ -32,9 +33,9 @@ abstract class BaseController extends Controller
 
     protected ?string $policy;
 
-    protected string $modelRequestForm;
+    protected ?string $modelRequestForm = null;
 
-    protected string $modelResource;
+    protected ?string $modelResource = null;
 
     protected ?User $user;
 
@@ -56,7 +57,7 @@ abstract class BaseController extends Controller
             'Model need to be defined'
         );
 
-        $this->componentsResolver = ComponentResolver::make($this->model);
+        $this->componentsResolver = App::make(ComponentResolver::class, ['modelClass' => $this->model]);
 
         $this->resolveComponents();
         $this->bindComponents();
@@ -96,5 +97,10 @@ abstract class BaseController extends Controller
     public function baseQuery(Builder $query): Builder
     {
         return $query;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
     }
 }

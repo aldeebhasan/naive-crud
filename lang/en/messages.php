@@ -12,4 +12,5 @@ return [
     'uploaded' => 'The item has been uploaded successfully',
     'imported' => 'The items has been imported successfully',
     'exported' => 'The items has been exported successfully, you will receive a notification of the exported items',
+    'unauthorized' => 'You are not authorized to perform this operation',
 ];
