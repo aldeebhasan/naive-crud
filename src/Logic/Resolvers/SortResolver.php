@@ -57,7 +57,7 @@ class SortResolver
         /** @var SortField $field */
         foreach ($fields as $field) {
 
-            if (!in_array($field->field, $this->values)) continue;
+            if (!in_array($field->field, array_keys($this->values))) continue;
 
             $direction = Arr::get($this->values, $field->field) ?? $field->defaultDirection;
             $direction = in_array($direction, ['asc', 'desc']) ? $direction : $field->defaultDirection;

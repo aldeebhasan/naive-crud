@@ -8,9 +8,9 @@ use Illuminate\Routing\Route;
 class NCResourceRegistrar extends BaseResourceRegistrar
 {
     protected $resourceDefaults = [
-        'index', 'store', 'show', 'update', 'destroy', 'toggle',
         'search', 'import', 'importTemplate', 'export',
         'bulkStore', 'bulkUpdate', 'bulkDestroy',
+        'index', 'store', 'show', 'update', 'destroy', 'toggle',
     ];
 
     protected function addResourceToggle(string $name, string $base, string $controller, array $options): Route

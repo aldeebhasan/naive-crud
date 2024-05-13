@@ -13,7 +13,7 @@ use Aldeebhasan\NaiveCrud\Test\Sample\App\Http\Resources\BlogResource;
 use Aldeebhasan\NaiveCrud\Test\Sample\App\Models\Blog;
 use Illuminate\Support\Facades\Gate;
 
-class IndexOperationTest extends FeatureTestCase
+class SearchOperationTest extends FeatureTestCase
 {
     protected function setUp(): void
     {
@@ -21,26 +21,26 @@ class IndexOperationTest extends FeatureTestCase
         $this->login();
     }
 
-    public function test_index_without_authorization()
+    public function test_search_without_authorization()
     {
-        $route = route('api.blogs.index');
+        $route = route('api.blogs.search');
         $response = $this->get($route);
         $response->assertStatus(403);
     }
 
-    public function test_index_with_authorization()
+    public function test_search_with_authorization()
     {
-        Gate::define('index_blogs', fn () => true);
-        $route = route('api.blogs.index');
+        Gate::define('index_blogs', fn() => true);
+        $route = route('api.blogs.search');
         $response = $this->get($route);
         $response->assertStatus(200);
     }
 
-    public function test_index_with_data()
+    public function test_search_with_data()
     {
         $items = factory(Blog::class)->times(5)->create();
-        Gate::define('index_blogs', fn () => true);
-        $route = route('api.blogs.index');
+        Gate::define('index_blogs', fn() => true);
+        $route = route('api.blogs.search');
         $response = $this->get($route);
         $response->assertStatus(200);
         $response->assertJsonCount($items->count(), 'data.items');
@@ -49,6 +49,7 @@ class IndexOperationTest extends FeatureTestCase
                 'items' => [
                     '*' => array_keys($items->first()->toArray()),
                 ],
+                'meta' => ['has_more_page']
             ],
         ]);
     }
@@ -66,16 +67,17 @@ class IndexOperationTest extends FeatureTestCase
         );
 
         $items = factory(Blog::class)->times(5)->create();
-        Gate::define('index_blogs', fn () => true);
-        $route = route('api.blogs.index');
+        Gate::define('index_blogs', fn() => true);
+        $route = route('api.blogs.search');
         $response = $this->get($route);
         $response->assertStatus(200);
         $response->assertJsonCount($items->count(), 'data.items');
         $response->assertJsonStructure([
             'data' => [
                 'items' => [
-                    '*' => ['id', 'slug', 'title', 'description'],
+                    '*' => ['key', 'value'],
                 ],
+                'meta' => ['has_more_page']
             ],
         ]);
     }
@@ -86,7 +88,7 @@ class IndexOperationTest extends FeatureTestCase
             public function fields(): array
             {
                 return [
-                    new FilterField(field: 'id', operator: '='),
+                    new FilterField(field: 'title', operator: '='),
                 ];
             }
         };
@@ -105,8 +107,8 @@ class IndexOperationTest extends FeatureTestCase
         );
 
         $items = factory(Blog::class)->times(5)->create();
-        Gate::define('index_blogs', fn () => true);
-        $route = route('api.blogs.index', ['filters' => ['id' => $items->first()->id]]);
+        Gate::define('index_blogs', fn() => true);
+        $route = route('api.blogs.search', ['filters' => ['title' => $items->first()->title]]);
         $response = $this->get($route);
         $response->assertStatus(200);
         $response->assertJsonCount(1, 'data.items');
@@ -118,7 +120,7 @@ class IndexOperationTest extends FeatureTestCase
             public function fields(): array
             {
                 return [
-                    new SortField(field: 'id', defaultDirection: 'asc'),
+                    new SortField(field: 'title', defaultDirection: 'asc'),
                 ];
             }
         };
@@ -137,12 +139,12 @@ class IndexOperationTest extends FeatureTestCase
         );
 
         $items = factory(Blog::class)->times(5)->create();
-        Gate::define('index_blogs', fn () => true);
-        $route = route('api.blogs.index', ['sorts' => ['id' => 'desc']]);
+        Gate::define('index_blogs', fn() => true);
+        $route = route('api.blogs.search', ['sorts' => ['title' => 'desc']]);
         $response = $this->get($route);
         $response->assertStatus(200);
         $response->assertJsonCount($items->count(), 'data.items');
-        $firstId = $response->json('data.items.0.id');
-        self::assertEquals($items->last()->id, $firstId);
+        $firstId = $response->json('data.items.0.title');
+        self::assertEquals($items->sortByDesc('title')->first()->title, $firstId);
     }
 }

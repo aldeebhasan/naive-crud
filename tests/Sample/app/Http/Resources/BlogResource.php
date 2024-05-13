@@ -16,4 +16,17 @@ class BlogResource extends BaseResource
             'description' => $this->description,
         ];
     }
+
+    public function toShowArray(Request $request): array
+    {
+        return $this->toIndexArray($request);
+    }
+
+    public function toSearchArray(Request $request): array
+    {
+        return [
+            'key' => $this->id,
+            'value' => $this->title
+        ];
+    }
 }
