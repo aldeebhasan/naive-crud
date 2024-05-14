@@ -2,9 +2,13 @@
 
 namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
+use Illuminate\Foundation\Auth\User;
+
 trait AuthorizeTrait
 {
     protected bool $authorize = true;
+
+    private ?User $user;
 
     protected string|array $indexAbility = 'index';
 
@@ -26,14 +30,14 @@ trait AuthorizeTrait
 
     protected function can(string|array $ability, $model = null): bool
     {
-        if ($this->authorize && !empty($ability)) {
-            if ($this->getUser() && $this->getUser()->can($ability, $model ?? $this->model)) {
-                return true;
-            }
-            abort(403, __('NaiveCrud::messages.unauthorized'));
+        if (!$this->authorize && empty($ability)) {
+            return true;
         }
 
-        return true;
+        if ($this->resolveUser() && $this->resolveUser()->can($ability, $model ?? $this->model)) {
+            return true;
+        }
+        abort(403, __('NaiveCrud::messages.unauthorized'));
     }
 
     /**
@@ -106,5 +110,18 @@ trait AuthorizeTrait
     public function getExportAbility(): array|string
     {
         return $this->exportAbility;
+    }
+
+
+    public function resolveUser(): ?User
+    {
+        $this->user ??= auth()->guard(config('naive-crud.auth_guard'))->user();
+
+        return $this->user;
+    }
+
+    public function setUser(?User $user): void
+    {
+        $this->user = $user;
     }
 }

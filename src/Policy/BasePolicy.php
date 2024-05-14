@@ -30,7 +30,7 @@ class BasePolicy
      */
     public function index(Model $user): bool
     {
-        return $this->checkIfCan('index', $user);
+        return $this->userCan('index', $user);
     }
 
     /**
@@ -38,7 +38,7 @@ class BasePolicy
      */
     public function show(Model $user, mixed $model = null): bool
     {
-        return $this->checkIfCan('show', $user, $model);
+        return $this->userCan('show', $user, $model);
     }
 
     /**
@@ -46,7 +46,7 @@ class BasePolicy
      */
     public function create(Model $user): bool
     {
-        return $this->checkIfCan('create', $user);
+        return $this->userCan('create', $user);
     }
 
     /**
@@ -54,7 +54,7 @@ class BasePolicy
      */
     public function update(Model $user, mixed $model = null): bool
     {
-        return $this->checkIfCan('update', $user, $model);
+        return $this->userCan('update', $user, $model);
     }
 
     /**
@@ -62,7 +62,7 @@ class BasePolicy
      */
     public function delete(Model $user, mixed $model = null): bool
     {
-        return $this->checkIfCan('delete', $user, $model);
+        return $this->userCan('delete', $user, $model);
     }
 
     /**
@@ -70,7 +70,7 @@ class BasePolicy
      */
     public function restore(Model $user, mixed $model = null): bool
     {
-        return $this->checkIfCan('restore', $user, $model);
+        return $this->userCan('restore', $user, $model);
     }
 
     /**
@@ -78,7 +78,7 @@ class BasePolicy
      */
     public function forceDelete(Model $user, mixed $model = null): bool
     {
-        return $this->checkIfCan('forceDelete', $user, $model);
+        return $this->userCan('forceDelete', $user, $model);
     }
 
     /**
@@ -86,7 +86,7 @@ class BasePolicy
      */
     public function export(Model $user): bool
     {
-        return $this->checkIfCan('export', $user);
+        return $this->userCan('export', $user);
     }
 
     /**
@@ -94,7 +94,7 @@ class BasePolicy
      */
     public function import(Model $user): bool
     {
-        return $this->checkIfCan('import', $user);
+        return $this->userCan('import', $user);
     }
 
     public function doesOwnItem(Model $user, mixed $model = null): bool
@@ -102,7 +102,7 @@ class BasePolicy
         return true;
     }
 
-    protected function checkIfCan(string $action, Model $user, mixed $model = null, string $key = null): bool
+    protected function userCan(string $action, Model $user, mixed $model = null, string $key = null): bool
     {
         $policyKey = sprintf('%s_%s', $action, $this->getKey($key, $model));
 

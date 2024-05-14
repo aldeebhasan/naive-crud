@@ -19,7 +19,6 @@ use Aldeebhasan\NaiveCrud\Traits\Crud\ToggleTrait;
 use Aldeebhasan\NaiveCrud\Traits\Crud\UpdateTrait;
 use Aldeebhasan\NaiveCrud\Traits\QueryResolverTrait;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Foundation\Auth\User;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\App;
 
@@ -36,8 +35,6 @@ abstract class BaseController extends Controller
     protected ?string $modelRequestForm = null;
 
     protected ?string $modelResource = null;
-
-    protected ?User $user;
 
     protected ComponentResolver $componentsResolver;
 
@@ -63,7 +60,7 @@ abstract class BaseController extends Controller
         $this->bindComponents();
 
         $this->middleware(function ($request, $next) {
-            $this->user = auth()->user();
+            $this->resolveUser();
             $this->afterConstructHook($this);
 
             return $next($request);
@@ -84,7 +81,7 @@ abstract class BaseController extends Controller
     {
         $this->componentsResolver->bindRequestForm($this->modelRequestForm);
 
-        if (! empty($this->policy)) {
+        if (!empty($this->policy)) {
             $this->componentsResolver->bindPolicy($this->policy);
         }
     }
@@ -97,10 +94,5 @@ abstract class BaseController extends Controller
     public function baseQuery(Builder $query): Builder
     {
         return $query;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
     }
 }

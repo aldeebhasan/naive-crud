@@ -94,7 +94,7 @@ class IndexOperationTest extends FeatureTestCase
             BlogController::class,
             function () use ($filter) {
                 $componentsResolverMock = \Mockery::mock(BlogController::class)->makePartial();
-                $componentsResolverMock->shouldReceive('getUser')->andReturn($this->user);
+                $componentsResolverMock->shouldReceive('resolveUser')->andReturn($this->user);
                 $componentsResolverMock->shouldReceive('fullQueryResolver')->once()->andReturn(
                     QueryResolver::make(Blog::class, $componentsResolverMock->baseQuery(...))
                         ->setFilters([$filter])
@@ -126,7 +126,7 @@ class IndexOperationTest extends FeatureTestCase
             BlogController::class,
             function () use ($sorter) {
                 $componentsResolverMock = \Mockery::mock(BlogController::class)->makePartial();
-                $componentsResolverMock->shouldReceive('getUser')->andReturn($this->user);
+                $componentsResolverMock->shouldReceive('resolveUser')->andReturn($this->user);
                 $componentsResolverMock->shouldReceive('fullQueryResolver')->once()->andReturn(
                     QueryResolver::make(Blog::class, $componentsResolverMock->baseQuery(...))
                         ->setSorters($sorter)
