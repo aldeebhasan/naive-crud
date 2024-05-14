@@ -8,7 +8,6 @@ use Aldeebhasan\NaiveCrud\Traits\Makable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use function Orchestra\Testbench\default_skeleton_path;
 
 /**@method  static SortResolver make(Request $request) */
 class SortResolver
@@ -16,6 +15,7 @@ class SortResolver
     use Makable;
 
     protected array $sorts;
+
     protected array $values;
 
     public function __construct(protected Request $request)
@@ -23,13 +23,12 @@ class SortResolver
         $this->values = $request->get('sorts', []);
     }
 
-
     public function setValues(array $values): self
     {
         $this->values = $values;
+
         return $this;
     }
-
 
     /**
      * @param SortUI|array<SortUI> $sorts
@@ -57,12 +56,12 @@ class SortResolver
         /** @var SortField $field */
         foreach ($fields as $field) {
 
-            if (!in_array($field->field, array_keys($this->values))) continue;
+            if (! in_array($field->field, array_keys($this->values))) continue;
 
             $direction = Arr::get($this->values, $field->field) ?? $field->defaultDirection;
             $direction = in_array($direction, ['asc', 'desc']) ? $direction : $field->defaultDirection;
 
-            if (!empty($field->callback) && is_callable($field->callback)) {
+            if (! empty($field->callback) && is_callable($field->callback)) {
                 call_user_func($field->callback, $query);
             } else {
                 $query->orderBy($field->column, $direction);

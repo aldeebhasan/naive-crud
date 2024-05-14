@@ -15,6 +15,10 @@ class FileManager
 
     protected string $fileName = '';
 
+    protected bool $thumbnail = false;
+
+    protected array $thumbnailDim = [];
+
     protected UploadedFile $file;
 
     public function setFile(UploadedFile $file): self
@@ -31,6 +35,17 @@ class FileManager
         return $this;
     }
 
+    public function withThumbnail(int $width, ?int $height = null): self
+    {
+        $this->thumbnail = true;
+        $this->thumbnailDim = [
+            'width' => $width,
+            'height' => $height ?? $width,
+        ];
+
+        return $this;
+    }
+
     public function uploadImage(string $name = ''): array
     {
         $extension = strtolower($this->file->getClientOriginalExtension()) === 'png' ?: 'jpeg';
@@ -42,19 +57,26 @@ class FileManager
         $image = $image->scaleDown($width, $height);
         $encoded = $image->encodeByExtension($extension, quality: 75)->toString();
 
+        $name = $name ?: (time().uniqid());
         $response = $this->upload($encoded, $name, $extension);
 
-        if (config('naive-crud.image_thumbnail', false)) {
-            $image = ImageManager::imagick()->read($file);
-            $width = config('naive-crud.image_thumbnail_width');
-            $image = $image->cover($width, $width);
-            $encoded = $image->encodeByExtension($extension, quality: 75)->toString();
-
-            $thumbnailName = 'thumbnails/'.pathinfo($response['url'], PATHINFO_FILENAME);
-            $this->upload($encoded, $thumbnailName, $extension);
-        }
+        $this->generateThumbnail($file, $name, $extension);
 
         return $response;
+    }
+
+    protected function generateThumbnail(string $file, string $name, string $extension): void
+    {
+        if (! $this->thumbnail) {
+            return;
+        }
+
+        $image = ImageManager::imagick()->read($file);
+        $image = $image->cover($this->thumbnailDim['width'], $this->thumbnailDim['height']);
+        $encoded = $image->encodeByExtension($extension, quality: 75)->toString();
+
+        $thumbnailName = "thumbnails/$name";
+        $this->upload($encoded, $thumbnailName, $extension);
     }
 
     public function uploadFile(string $name = ''): array
@@ -65,7 +87,7 @@ class FileManager
         return $this->upload($file, $name, $extension);
     }
 
-    private function upload(string $file, string $name = '', string $extension = ''): array
+    private function upload(string $file, string $name, string $extension): array
     {
         $name = $name ?: (time().uniqid());
         $name = "$name.$extension";
@@ -75,6 +97,7 @@ class FileManager
 
         return [
             'url' => asset($path),
+            'name' => $name,
             'meta' => [
                 'extension' => $extension,
                 'mime' => $this->file->getMimeType(),

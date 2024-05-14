@@ -26,7 +26,7 @@ class BlogResource extends BaseResource
     {
         return [
             'key' => $this->id,
-            'value' => $this->title
+            'value' => $this->title,
         ];
     }
 }

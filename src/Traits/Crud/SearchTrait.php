@@ -12,7 +12,7 @@ trait SearchTrait
 {
     protected string $searchKeyword = 'q';
 
-    protected function searchQuery(Builder $query, string $value = ""): Builder
+    protected function searchQuery(Builder $query, string $value = ''): Builder
     {
         return $query;
     }
@@ -21,7 +21,7 @@ trait SearchTrait
     {
         $this->can($this->getIndexAbility());
 
-        $value = $request->get($this->searchKeyword, "");
+        $value = $request->get($this->searchKeyword, '');
         $this->beforeSearchHook($request);
 
         $query = $this->fullQueryResolver($request)

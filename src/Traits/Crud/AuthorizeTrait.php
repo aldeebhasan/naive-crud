@@ -30,7 +30,7 @@ trait AuthorizeTrait
 
     protected function can(string|array $ability, $model = null): bool
     {
-        if (!$this->authorize && empty($ability)) {
+        if (! $this->authorize && empty($ability)) {
             return true;
         }
 
@@ -111,7 +111,6 @@ trait AuthorizeTrait
     {
         return $this->exportAbility;
     }
-
 
     public function resolveUser(): ?User
     {

@@ -21,7 +21,12 @@ class UploadController extends Controller
             'resource' => 'required|string',
         ]);
         $file = $request->file('file');
-        $info = $fileManager->setPath($validated['resource'])->uploadImage($file);
+
+        $fileManager->setPath($validated['resource']);
+        if (config('naive-crud.image_thumbnail', false)) {
+            $fileManager->withThumbnail(config('naive-crud.image_thumbnail_width'));
+        }
+        $info = $fileManager->uploadImage($file);
 
         return $this->success(__('NaiveCrud::messages.uploaded'), $info);
     }

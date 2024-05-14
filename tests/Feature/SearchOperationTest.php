@@ -30,7 +30,7 @@ class SearchOperationTest extends FeatureTestCase
 
     public function test_search_with_authorization()
     {
-        Gate::define('index_blogs', fn() => true);
+        Gate::define('index_blogs', fn () => true);
         $route = route('api.blogs.search');
         $response = $this->get($route);
         $response->assertStatus(200);
@@ -39,7 +39,7 @@ class SearchOperationTest extends FeatureTestCase
     public function test_search_with_data()
     {
         $items = factory(Blog::class)->times(5)->create();
-        Gate::define('index_blogs', fn() => true);
+        Gate::define('index_blogs', fn () => true);
         $route = route('api.blogs.search');
         $response = $this->get($route);
         $response->assertStatus(200);
@@ -49,7 +49,7 @@ class SearchOperationTest extends FeatureTestCase
                 'items' => [
                     '*' => array_keys($items->first()->toArray()),
                 ],
-                'meta' => ['has_more_page']
+                'meta' => ['has_more_page'],
             ],
         ]);
     }
@@ -67,7 +67,7 @@ class SearchOperationTest extends FeatureTestCase
         );
 
         $items = factory(Blog::class)->times(5)->create();
-        Gate::define('index_blogs', fn() => true);
+        Gate::define('index_blogs', fn () => true);
         $route = route('api.blogs.search');
         $response = $this->get($route);
         $response->assertStatus(200);
@@ -77,7 +77,7 @@ class SearchOperationTest extends FeatureTestCase
                 'items' => [
                     '*' => ['key', 'value'],
                 ],
-                'meta' => ['has_more_page']
+                'meta' => ['has_more_page'],
             ],
         ]);
     }
@@ -107,7 +107,7 @@ class SearchOperationTest extends FeatureTestCase
         );
 
         $items = factory(Blog::class)->times(5)->create();
-        Gate::define('index_blogs', fn() => true);
+        Gate::define('index_blogs', fn () => true);
         $route = route('api.blogs.search', ['filters' => ['title' => $items->first()->title]]);
         $response = $this->get($route);
         $response->assertStatus(200);
@@ -139,7 +139,7 @@ class SearchOperationTest extends FeatureTestCase
         );
 
         $items = factory(Blog::class)->times(5)->create();
-        Gate::define('index_blogs', fn() => true);
+        Gate::define('index_blogs', fn () => true);
         $route = route('api.blogs.search', ['sorts' => ['title' => 'desc']]);
         $response = $this->get($route);
         $response->assertStatus(200);

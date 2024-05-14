@@ -81,7 +81,7 @@ abstract class BaseController extends Controller
     {
         $this->componentsResolver->bindRequestForm($this->modelRequestForm);
 
-        if (!empty($this->policy)) {
+        if (! empty($this->policy)) {
             $this->componentsResolver->bindPolicy($this->policy);
         }
     }

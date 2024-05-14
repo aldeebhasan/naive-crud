@@ -10,6 +10,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 class BlogController extends BaseController
 {
     use ValidatesRequests;
+
     protected string $model = Blog::class;
 
     protected ?string $policy = BlogPolicy::class;
@@ -17,7 +18,7 @@ class BlogController extends BaseController
     protected function extraStoreData(): array
     {
         return [
-            'user_id' => $this->resolveUser()->id
+            'user_id' => $this->resolveUser()->id,
         ];
     }
 }

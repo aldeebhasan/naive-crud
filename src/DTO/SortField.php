@@ -13,9 +13,9 @@ final class SortField
     public readonly mixed $callback;
 
     public function __construct(
-        string   $field,
-        ?string  $column = null,
-        ?string  $defaultDirection = 'desc',
+        string $field,
+        ?string $column = null,
+        ?string $defaultDirection = 'desc',
         callable $callback = null
     )
     {

@@ -2,13 +2,7 @@
 
 namespace Aldeebhasan\NaiveCrud\Test\Feature;
 
-use Aldeebhasan\NaiveCrud\Contracts\FilterUI;
-use Aldeebhasan\NaiveCrud\Contracts\SortUI;
-use Aldeebhasan\NaiveCrud\DTO\FilterField;
-use Aldeebhasan\NaiveCrud\DTO\SortField;
 use Aldeebhasan\NaiveCrud\Logic\Resolvers\ComponentResolver;
-use Aldeebhasan\NaiveCrud\Logic\Resolvers\QueryResolver;
-use Aldeebhasan\NaiveCrud\Test\Sample\App\Http\Controllers\BlogController;
 use Aldeebhasan\NaiveCrud\Test\Sample\App\Http\Requests\BlogRequest;
 use Aldeebhasan\NaiveCrud\Test\Sample\App\Http\Resources\BlogResource;
 use Aldeebhasan\NaiveCrud\Test\Sample\App\Models\Blog;
@@ -17,9 +11,9 @@ use Illuminate\Support\Facades\Gate;
 class CreateOperationTest extends FeatureTestCase
 {
     private array $payload = [
-        'title' => "title here",
-        'description' => "description here",
-        'image' => null
+        'title' => 'title here',
+        'description' => 'description here',
+        'image' => null,
     ];
 
     protected function setUp(): void
@@ -38,7 +32,7 @@ class CreateOperationTest extends FeatureTestCase
 
     public function test_create_with_missing_data()
     {
-        Gate::define('create_blogs', fn() => true);
+        Gate::define('create_blogs', fn () => true);
         $route = route('api.blogs.store', $this->payload);
         $response = $this->post($route);
         $response->assertServerError();
@@ -56,7 +50,7 @@ class CreateOperationTest extends FeatureTestCase
             }
         );
 
-        Gate::define('create_blogs', fn() => true);
+        Gate::define('create_blogs', fn () => true);
         $route = route('api.blogs.store', $this->payload);
         $response = $this->post($route);
         $response->assertStatus(201);
@@ -65,7 +59,6 @@ class CreateOperationTest extends FeatureTestCase
             'data' => ['id', 'title', 'description'],
         ]);
     }
-
 
     public function test_create_with_custom_resource()
     {
@@ -80,7 +73,7 @@ class CreateOperationTest extends FeatureTestCase
             }
         );
 
-        Gate::define('create_blogs', fn() => true);
+        Gate::define('create_blogs', fn () => true);
         $route = route('api.blogs.store', $this->payload);
         $response = $this->post($route);
         $response->assertStatus(201);
