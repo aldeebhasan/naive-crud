@@ -69,7 +69,6 @@ abstract class BaseController extends Controller
 
     private function resolveComponents(): void
     {
-
         $this->modelRequestForm = $this->componentsResolver->resolveRequestForm($this->modelRequestForm);
         $this->modelResource = $this->componentsResolver->resolveModelResource($this->modelResource);
     }
@@ -94,5 +93,10 @@ abstract class BaseController extends Controller
     public function baseQuery(Builder $query): Builder
     {
         return $query;
+    }
+
+    public function getModelKey(): string
+    {
+        return (new $this->model)->getKeyName();
     }
 }

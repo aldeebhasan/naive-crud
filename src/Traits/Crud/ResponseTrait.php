@@ -6,30 +6,24 @@ use Illuminate\Http\JsonResponse;
 
 trait ResponseTrait
 {
-    protected function success($message, $data = [], $status = 200): JsonResponse
+    protected function success(string $message, array $data = [], int $status = 200): JsonResponse
     {
         return response()->json([
-            'success' => true,
             'message' => $message,
-            'data' => $data,
+            'data' => ! empty($data) ? $data : null,
         ], $status);
     }
 
-    protected function fail($message, $data = [], $status = 400): JsonResponse
+    protected function fail(string $message, array $data = [], int $status = 400): JsonResponse
     {
         return response()->json([
-            'success' => false,
             'message' => $message,
-            'data' => $data,
+            'data' => ! empty($data) ? $data : null,
         ], $status);
     }
 
     protected function notFound(): JsonResponse
     {
-        return response()->json([
-            'success' => false,
-            'message' => __('NaiveCrud::messages.notfound'),
-            'data' => [],
-        ], 404);
+        return $this->fail(__('NaiveCrud::messages.notfound'), status: 404);
     }
 }

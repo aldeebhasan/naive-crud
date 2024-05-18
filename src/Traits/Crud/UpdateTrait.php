@@ -13,8 +13,7 @@ trait UpdateTrait
     /** @param BaseRequest $request */
     public function update(Request $request, $id): JsonResponse
     {
-        $query = $this->model::query();
-        $query = $this->baseQuery($query);
+        $query = $this->baseQueryResolver($request)->build();
 
         $item = $query->findOrFail($id);
         $this->can($this->getUpdateAbility(), $item);
@@ -28,7 +27,7 @@ trait UpdateTrait
 
         $data = $this->formatUpdateResponse($item);
 
-        return $this->success(__('NaiveCrud::messages.updated'), $data, 201);
+        return $this->success(__('NaiveCrud::messages.updated'), $data);
     }
 
     /** @param BaseRequest $request */
@@ -42,8 +41,11 @@ trait UpdateTrait
 
         $this->beforeBulkUpdateHook($request);
         $count = 0;
+        $ids = array_keys($data['resources']);
+        $items = $query->whereKey($ids)->get();
+        $key = $this->getModelKey();
         foreach ($data['resources'] as $id => $itemData) {
-            $item = $query->find($id);
+            $item = $items->firstWhere($key, $id);
             if (! $item) continue;
 
             $itemData = array_merge($itemData, $this->extraUpdateData());

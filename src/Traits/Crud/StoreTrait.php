@@ -45,7 +45,7 @@ trait StoreTrait
 
         $this->afterBulkStoreHook($request);
 
-        return $this->success(__('NaiveCrud::messages.bulk-stored', ['count' => $count]));
+        return $this->success(__('NaiveCrud::messages.bulk-stored', ['count' => $count]), status: 201);
     }
 
     protected function extraStoreData(): array

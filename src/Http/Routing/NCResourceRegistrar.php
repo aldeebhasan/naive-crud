@@ -10,7 +10,7 @@ class NCResourceRegistrar extends BaseResourceRegistrar
     protected $resourceDefaults = [
         'search', 'import', 'importTemplate', 'export',
         'bulkStore', 'bulkUpdate', 'bulkDestroy',
-        'index', 'store', 'show', 'update', 'destroy', 'toggle',
+        'toggle', 'index', 'store', 'show', 'update', 'destroy',
     ];
 
     protected function addResourceToggle(string $name, string $base, string $controller, array $options): Route
@@ -20,6 +20,7 @@ class NCResourceRegistrar extends BaseResourceRegistrar
         $action = $this->getResourceAction($name, $controller, 'toggle', $options);
 
         return $this->router->put($uri, $action);
+
     }
 
     protected function addResourceSearch(string $name, string $base, string $controller, array $options): Route

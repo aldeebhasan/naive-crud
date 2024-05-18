@@ -82,7 +82,9 @@ class QueryResolver
         $this->request ??= \request();
 
         $this->query = call_user_func($this->baseQueryFn, $this->query);
-        $this->query = call_user_func($this->extendedQueryFn, $this->query, ...$this->extendedQueryArgs);
+        if (isset($this->extendedQueryFn)) {
+            $this->query = call_user_func($this->extendedQueryFn, $this->query, ...$this->extendedQueryArgs);
+        }
 
         if ($this->filters) {
             $this->query = FilterResolver::make($this->request)->setFilters($this->filters)->apply($this->query);

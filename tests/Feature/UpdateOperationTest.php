@@ -8,7 +8,7 @@ use Aldeebhasan\NaiveCrud\Test\Sample\App\Http\Resources\BlogResource;
 use Aldeebhasan\NaiveCrud\Test\Sample\App\Models\Blog;
 use Illuminate\Support\Facades\Gate;
 
-class CreateOperationTest extends FeatureTestCase
+class UpdateOperationTest extends FeatureTestCase
 {
     private array $payload = [
         'title' => 'title here',
@@ -22,24 +22,26 @@ class CreateOperationTest extends FeatureTestCase
         $this->login();
     }
 
-    public function test_create_without_authorization()
+    public function test_update_without_authorization()
     {
-
-        $route = route('api.blogs.store');
-        $response = $this->post($route, $this->payload);
+        $blog = factory(Blog::class)->create();
+        $route = route('api.blogs.update', ['blog' => $blog->id]);
+        $response = $this->put($route, $this->payload);
         $response->assertStatus(403);
     }
 
-    public function test_create_with__data()
+    public function test_update_with_missing_data()
     {
-        Gate::define('create_blogs', fn () => true);
-        $route = route('api.blogs.store');
-        $response = $this->post($route, $this->payload);
-        $response->assertServerError();
+        $blog = factory(Blog::class)->create();
+        Gate::define('update_blogs', fn () => true);
+        $route = route('api.blogs.update', ['blog' => $blog->id]);
+        $response = $this->put($route, $this->payload);
+        $response->assertOk();
     }
 
-    public function test_create_with_full_data()
+    public function test_update_with_full_data()
     {
+        $blog = factory(Blog::class)->create();
         app()->bind(
             ComponentResolver::class,
             function () {
@@ -50,17 +52,18 @@ class CreateOperationTest extends FeatureTestCase
             }
         );
 
-        Gate::define('create_blogs', fn () => true);
-        $route = route('api.blogs.store');
-        $response = $this->post($route, $this->payload);
-        $response->assertStatus(201);
+        Gate::define('update_blogs', fn () => true);
+        $route = route('api.blogs.update', ['blog' => $blog->id]);
+        $response = $this->put($route, $this->payload);
+        $response->assertOk();
         $response->assertJsonStructure([
             'data' => ['id', 'title', 'description'],
         ]);
     }
 
-    public function test_create_with_custom_resource()
+    public function test_update_with_custom_resource()
     {
+        $blog = factory(Blog::class)->create();
         app()->bind(
             ComponentResolver::class,
             function () {
@@ -72,17 +75,18 @@ class CreateOperationTest extends FeatureTestCase
             }
         );
 
-        Gate::define('create_blogs', fn () => true);
-        $route = route('api.blogs.store', $this->payload);
-        $response = $this->post($route);
-        $response->assertStatus(201);
+        Gate::define('update_blogs', fn () => true);
+        $route = route('api.blogs.update', ['blog' => $blog->id]);
+        $response = $this->put($route, $this->payload);
+        $response->assertOk();
         $response->assertJsonStructure([
             'data' => ['id', 'slug', 'title', 'description'],
         ]);
     }
 
-    public function test_bulk_create_with_full_data()
+    public function test_bulk_update_with_full_data()
     {
+        $blogs = factory(Blog::class)->times(2)->create();
         app()->bind(
             ComponentResolver::class,
             function () {
@@ -93,12 +97,12 @@ class CreateOperationTest extends FeatureTestCase
             }
         );
 
-        Gate::define('create_blogs', fn () => true);
-        $resources = ['resources' => [$this->payload, $this->payload]];
-        $route = route('api.blogs.bulkStore');
-        $response = $this->post($route, $resources);
-        $response->assertStatus(201);
+        Gate::define('update_blogs', fn () => true);
+        $resources = ['resources' => $blogs->mapWithKeys(fn ($item) => [$item->id => $this->payload])->toArray()];
+        $route = route('api.blogs.bulkUpdate');
+        $response = $this->put($route, $resources);
+        $response->assertOk();
         $this->assertDatabaseCount('blogs', 2);
-        self::assertEquals($response->json('message'), __('NaiveCrud::messages.bulk-stored', ['count' => 2]));
+        self::assertEquals($response->json('message'), __('NaiveCrud::messages.bulk-updated', ['count' => 2]));
     }
 }
