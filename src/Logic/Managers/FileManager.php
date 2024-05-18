@@ -17,6 +17,10 @@ class FileManager
 
     protected bool $thumbnail = false;
 
+    protected bool $resize = false;
+
+    protected array $imageDim = [];
+
     protected array $thumbnailDim = [];
 
     protected UploadedFile $file;
@@ -35,10 +39,21 @@ class FileManager
         return $this;
     }
 
-    public function withThumbnail(int $width, ?int $height = null): self
+    public function thumbnail(int $width, ?int $height = null): self
     {
         $this->thumbnail = true;
         $this->thumbnailDim = [
+            'width' => $width,
+            'height' => $height ?? $width,
+        ];
+
+        return $this;
+    }
+
+    public function resize(int $width, ?int $height = null): self
+    {
+        $this->resize = true;
+        $this->imageDim = [
             'width' => $width,
             'height' => $height ?? $width,
         ];
@@ -52,9 +67,9 @@ class FileManager
         $file = file_get_contents($this->file);
 
         $image = ImageManager::imagick()->read($file);
-        $width = config('naive-crud.image_max_width');
-        $height = config('naive-crud.image_max_height');
-        $image = $image->scaleDown($width, $height);
+        if ($this->resize) {
+            $image = $image->scaleDown($this->imageDim['width'], $this->imageDim['height']);
+        }
         $encoded = $image->encodeByExtension($extension, quality: 75)->toString();
 
         $name = $name ?: (time().uniqid());
@@ -102,18 +117,18 @@ class FileManager
                 'extension' => $extension,
                 'mime' => $this->file->getMimeType(),
             ],
+            'size' => [
+                'value' => round($this->file->getSize() / 1024, 3),
+                'unit' => 'KB',
+            ],
         ];
     }
 
     public function getAssetPath(string $path = ''): string
     {
-        if (config('filesystems.default') === 's3') {
-            $base = "public/$path";
-        } else {
-            $base = "storage/$path";
-        }
+        $path = $this->getStoragePath($path);
 
-        return $base;
+        return Storage::url($path);
     }
 
     public function getStoragePath(string $path = ''): string

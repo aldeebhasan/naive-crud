@@ -22,11 +22,14 @@ class UploadController extends Controller
         ]);
         $file = $request->file('file');
 
-        $fileManager->setPath($validated['resource']);
+        $fileManager->setPath($validated['resource'])->setFile($file);
         if (config('naive-crud.image_thumbnail', false)) {
-            $fileManager->withThumbnail(config('naive-crud.image_thumbnail_width'));
+            $fileManager->thumbnail(config('naive-crud.image_thumbnail_width'));
         }
-        $info = $fileManager->uploadImage($file);
+        if (config('naive-crud.image_resize', true)) {
+            $fileManager->resize(config('naive-crud.image_width'), config('naive-crud.image_height'));
+        }
+        $info = $fileManager->uploadImage();
 
         return $this->success(__('NaiveCrud::messages.uploaded'), $info);
     }
@@ -36,11 +39,11 @@ class UploadController extends Controller
         $max = config('naive-crud.file_max_size');
         $extensions = config('naive-crud.file_extensions');
         $validated = $request->validate([
-            'file' => "required|max:{$max}|$extensions",
+            'file' => "required|max:{$max}|mimes:$extensions",
             'resource' => 'required|string',
         ]);
         $file = $request->file('file');
-        $info = $fileManager->setPath($validated['resource'])->uploadFile($file);
+        $info = $fileManager->setPath($validated['resource'])->setFile($file)->uploadFile();
 
         return $this->success(__('NaiveCrud::messages.uploaded'), $info);
     }

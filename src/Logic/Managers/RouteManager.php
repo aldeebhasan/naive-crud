@@ -29,8 +29,9 @@ class RouteManager
 
     public function files(string $name): void
     {
+        $shallowName = last(explode('/', $name));
         $router = app('router');
-        $router->post("{$name}/upload-image", [UploadController::class, 'image'])->name("{$name}.image");
-        $router->post("{$name}/upload-file", [UploadController::class, 'file'])->name("{$name}.file");
+        $router->post("{$name}/upload-image", [UploadController::class, 'image'])->name("{$shallowName}.image");
+        $router->post("{$name}/upload-file", [UploadController::class, 'file'])->name("{$shallowName}.file");
     }
 }
