@@ -2,19 +2,20 @@
 
 namespace Aldeebhasan\NaiveCrud\DTO;
 
-final class FilterField
+/**@method  static FilterField make(string $field, ?string $column = null, ?string $operator = '=', callable $callback = null, mixed $value = null) */
+final readonly class FilterField
 {
-    public readonly string $field;
+    public string $field;
 
-    public readonly ?string $column;
+    public ?string $column;
 
-    public readonly ?string $operator;
+    public ?string $operator;
 
-    public readonly mixed  $callback;
+    public mixed $callback;
 
-    public readonly mixed $value;
+    public mixed $value;
 
-    public readonly ?string $relation;
+    public ?string $relation;
 
     public function __construct(
         string $field,
@@ -34,7 +35,7 @@ final class FilterField
             [$relation, $relationColumn] = explode('.', $column);
             $this->relation = $relation;
             $this->column = $relationColumn;
-        }else{
+        } else {
             $this->relation = null;
             $this->column = $column ?? $field;
         }

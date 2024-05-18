@@ -2,15 +2,20 @@
 
 namespace Aldeebhasan\NaiveCrud\DTO;
 
-final class SortField
+use Aldeebhasan\NaiveCrud\Traits\Makable;
+
+/**@method  static SortField make(string $field, ?string $column = null, ?string $defaultDirection = 'desc', callable $callback = null) */
+final readonly class SortField
 {
-    public readonly string $field;
+    use Makable;
 
-    public readonly ?string $column;
+    public string $field;
 
-    public readonly string $defaultDirection;
+    public ?string $column;
 
-    public readonly mixed $callback;
+    public string $defaultDirection;
+
+    public mixed $callback;
 
     public function __construct(
         string $field,
