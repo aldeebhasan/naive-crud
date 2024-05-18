@@ -2,17 +2,17 @@
 
 namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
-use Aldeebhasan\NaiveCrud\Export\ModelCollectionExport;
-use Aldeebhasan\NaiveCrud\Export\ModelQueryExport;
+use Aldeebhasan\NaiveCrud\Excel\Export\ModelCollectionExport;
+use Aldeebhasan\NaiveCrud\Excel\Export\ModelQueryExport;
 use Aldeebhasan\NaiveCrud\Http\Requests\BaseRequest;
 use Aldeebhasan\NaiveCrud\Jobs\CompletedExportJob;
 use Aldeebhasan\NaiveCrud\Logic\Managers\FileManager;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Excel;
+use Symfony\Component\HttpFoundation\Response;
 
 trait ExportTrait
 {

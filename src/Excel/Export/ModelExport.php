@@ -1,6 +1,6 @@
 <?php
 
-namespace Aldeebhasan\NaiveCrud\Export;
+namespace Aldeebhasan\NaiveCrud\Excel\Export;
 
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithHeadings;

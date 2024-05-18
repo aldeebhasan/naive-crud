@@ -15,6 +15,8 @@ class BlogController extends BaseController
 
     protected ?string $policy = BlogPolicy::class;
 
+    protected bool $exportAllShouldQueue = false;
+
     protected function extraStoreData(): array
     {
         return [

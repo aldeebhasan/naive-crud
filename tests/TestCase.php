@@ -4,6 +4,7 @@ namespace Aldeebhasan\NaiveCrud\Test;
 
 use Aldeebhasan\NaiveCrud\NCProvider;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Maatwebsite\Excel\ExcelServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
@@ -20,7 +21,10 @@ abstract class TestCase extends BaseTestCase
 
     protected function getPackageProviders($app): array
     {
-        return [NCProvider::class];
+        return [
+            NCProvider::class,
+            ExcelServiceProvider::class,
+        ];
     }
 
     protected function getEnvironmentSetUp($app): void

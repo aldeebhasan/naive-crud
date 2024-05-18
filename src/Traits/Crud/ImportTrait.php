@@ -2,12 +2,15 @@
 
 namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
+use Aldeebhasan\NaiveCrud\Excel\Export\TemplateExport;
+use Aldeebhasan\NaiveCrud\Excel\Import\ModelImport;
+use Aldeebhasan\NaiveCrud\Exception\NCException;
 use Aldeebhasan\NaiveCrud\Http\Requests\BaseRequest;
-use Aldeebhasan\NaiveCrud\Import\ModelImport;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\Response;
 
 trait ImportTrait
 {
@@ -27,17 +30,17 @@ trait ImportTrait
         return $this->success(__('NaiveCrud::messages.imported'));
     }
 
-    public function importTemplate(Request $request): JsonResponse
+    public function importTemplate(Request $request): Response
     {
         $this->can($this->getImportAbility());
 
         $name = Str::snake(Str::pluralStudly(class_basename($this->model)));
         if (method_exists($this->model, 'importFields')) {
-            $sample = $this->model::importFields()->mapWithKeys(fn ($name) => [$name => $name])->toArray();
+            $fields = $this->model::importFields();
 
-            return collect([$sample])->downloadExcel("{$name}-template.csv");
+            return Excel::download(new TemplateExport($fields), "{$name}-template.csv");
         }
 
-        throw new \BadMethodCallException("Model $name doesnt has template fields", 400);
+        throw new NCException(400, "Model $name doesnt have template fields");
     }
 }

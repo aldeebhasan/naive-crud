@@ -4,6 +4,7 @@ namespace Aldeebhasan\NaiveCrud\Http\Controllers;
 
 use Aldeebhasan\NaiveCrud\Contracts\FilterUI;
 use Aldeebhasan\NaiveCrud\Contracts\SortUI;
+use Aldeebhasan\NaiveCrud\Exception\NCException;
 use Aldeebhasan\NaiveCrud\Logic\Resolvers\ComponentResolver;
 use Aldeebhasan\NaiveCrud\Traits\Crud\AuthorizeTrait;
 use Aldeebhasan\NaiveCrud\Traits\Crud\DeleteTrait;
@@ -50,8 +51,7 @@ abstract class BaseController extends Controller
     {
         throw_if(
             empty($this->model),
-            \LogicException::class,
-            'Model need to be defined'
+            new NCException(400, 'Model need to be defined')
         );
 
         $this->componentsResolver = App::make(ComponentResolver::class, ['modelClass' => $this->model]);

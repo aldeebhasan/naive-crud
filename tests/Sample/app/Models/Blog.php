@@ -22,4 +22,14 @@ class Blog extends Model
     {
         return $this->hasMany(Comment::class);
     }
+
+    public static function importFields(): array
+    {
+        return ['title', 'description', 'image'];
+    }
+
+    public static function formatImportItem(array $row, Model $user): array
+    {
+        return $row + ['user_id' => $user->id];
+    }
 }

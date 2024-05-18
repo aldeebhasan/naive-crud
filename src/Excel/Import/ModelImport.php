@@ -1,15 +1,16 @@
 <?php
 
-namespace Aldeebhasan\NaiveCrud\Import;
+namespace Aldeebhasan\NaiveCrud\Excel\Import;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class ModelImport implements ToModel, WithChunkReading, WithBatchInserts
+readonly class ModelImport implements ToModel, WithChunkReading, WithBatchInserts, WithHeadingRow
 {
-    public function __construct(private readonly string $model, private readonly Authenticatable $user)
+    public function __construct(private string $model, private Authenticatable $user)
     {
     }
 
