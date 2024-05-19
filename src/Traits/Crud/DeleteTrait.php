@@ -19,7 +19,7 @@ trait DeleteTrait
         $item->delete();
         $this->afterDeleteHook($request, $item);
 
-        return $this->success(__('NaiveCrud::messages.deleted'));
+        return $this->success(message: __('NaiveCrud::messages.deleted'));
     }
 
     public function bulkDestroy(Request $request): JsonResponse
@@ -38,6 +38,6 @@ trait DeleteTrait
         $count = $query->whereKey($ids)->delete();
         $this->afterBulkDeleteHook($request);
 
-        return $this->success(__('NaiveCrud::messages.bulk-deleted', ['count' => $count]));
+        return $this->success(message: __('NaiveCrud::messages.bulk-deleted', ['count' => $count]));
     }
 }

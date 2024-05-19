@@ -31,7 +31,7 @@ class UploadController extends Controller
         }
         $info = $fileManager->uploadImage();
 
-        return $this->success(__('NaiveCrud::messages.uploaded'), $info);
+        return $this->success($info, __('NaiveCrud::messages.uploaded'));
     }
 
     public function file(Request $request, FileManager $fileManager): JsonResponse
@@ -45,6 +45,6 @@ class UploadController extends Controller
         $file = $request->file('file');
         $info = $fileManager->setPath($validated['resource'])->setFile($file)->uploadFile();
 
-        return $this->success(__('NaiveCrud::messages.uploaded'), $info);
+        return $this->success($info, __('NaiveCrud::messages.uploaded'));
     }
 }

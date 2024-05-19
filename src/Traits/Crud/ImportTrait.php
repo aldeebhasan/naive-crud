@@ -27,7 +27,7 @@ trait ImportTrait
         Excel::import(new ModelImport($this->model, $user), $file);
         $this->afterImportHook($request);
 
-        return $this->success(__('NaiveCrud::messages.imported'));
+        return $this->success(message: __('NaiveCrud::messages.imported'));
     }
 
     public function importTemplate(Request $request): Response

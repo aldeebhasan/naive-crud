@@ -64,7 +64,7 @@ trait ExportTrait
                 new CompletedExportJob(request()->user(), $assetPath, $this->completedJobNotification),
             ]);
 
-            return $this->success(__('NaiveCrud::messages.exported'));
+            return $this->success(message: __('NaiveCrud::messages.exported'));
         }
 
         return $handler->download($fileName);

@@ -25,6 +25,6 @@ trait ToggleTrait
 
         $this->afterToggleHook($request);
 
-        return $this->success(__('NaiveCrud::messages.bulk-updated', ['count' => $count]));
+        return $this->success(message: __('NaiveCrud::messages.bulk-updated', ['count' => $count]));
     }
 }

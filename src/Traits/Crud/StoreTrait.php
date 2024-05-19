@@ -25,7 +25,7 @@ trait StoreTrait
 
         $data = $this->formatCreateResponse($item);
 
-        return $this->success(__('NaiveCrud::messages.stored'), $data, 201);
+        return $this->success($data, __('NaiveCrud::messages.stored'), 201);
     }
 
     /** @param BaseRequest $request */
@@ -45,7 +45,7 @@ trait StoreTrait
 
         $this->afterBulkStoreHook($request);
 
-        return $this->success(__('NaiveCrud::messages.bulk-stored', ['count' => $count]), status: 201);
+        return $this->success(message: __('NaiveCrud::messages.bulk-stored', ['count' => $count]), status: 201);
     }
 
     protected function extraStoreData(): array

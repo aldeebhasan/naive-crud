@@ -27,7 +27,7 @@ trait UpdateTrait
 
         $data = $this->formatUpdateResponse($item);
 
-        return $this->success(__('NaiveCrud::messages.updated'), $data);
+        return $this->success($data, __('NaiveCrud::messages.updated'));
     }
 
     /** @param BaseRequest $request */
@@ -46,7 +46,7 @@ trait UpdateTrait
         $key = $this->getModelKey();
         foreach ($data['resources'] as $id => $itemData) {
             $item = $items->firstWhere($key, $id);
-            if (! $item) continue;
+            if (!$item) continue;
 
             $itemData = array_merge($itemData, $this->extraUpdateData());
             $item->update($itemData);
@@ -54,7 +54,7 @@ trait UpdateTrait
         }
         $this->afterBulkUpdateHook($request);
 
-        return $this->success(__('NaiveCrud::messages.bulk-updated', ['count' => $count]));
+        return $this->success(message: __('NaiveCrud::messages.bulk-updated', ['count' => $count]));
     }
 
     protected function extraUpdateData(): array

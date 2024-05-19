@@ -33,7 +33,7 @@ trait SearchTrait
         $data = $this->formatSearchResponse($items);
         $this->afterSearchHook($request);
 
-        return $this->success(__('NaiveCrud::messages.success'), $data);
+        return $this->success($data, __('NaiveCrud::messages.success'));
     }
 
     protected function formatSearchResponse(Paginator $items): array

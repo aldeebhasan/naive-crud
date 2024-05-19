@@ -31,7 +31,7 @@ trait ShowTrait
 
         $this->afterShowHook($request, $item);
 
-        return $this->success(__('NaiveCrud::messages.success'), $data);
+        return $this->success($data, __('NaiveCrud::messages.success'));
     }
 
     protected function extraShowData(): array

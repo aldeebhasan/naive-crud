@@ -38,7 +38,7 @@ trait IndexTrait
         $data = array_merge($data, $this->extraIndexData());
         $this->afterIndexHook($request);
 
-        return $this->success(__('NaiveCrud::messages.success'), $data);
+        return $this->success($data, __('NaiveCrud::messages.success'));
     }
 
     protected function getLimit(): ?int
@@ -48,7 +48,7 @@ trait IndexTrait
 
     protected function applyFilter(Builder $query): void
     {
-        if (! empty($this->filter)) {
+        if (!empty($this->filter)) {
             $fields = $this->filter->fields();
 
         }
