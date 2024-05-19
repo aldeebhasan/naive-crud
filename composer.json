@@ -41,7 +41,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "NCProvider"
+        "Aldeebhasan\\NaiveCrud\\NCProvider"
       ],
       "aliases": {
       }
