@@ -48,7 +48,7 @@ trait IndexTrait
 
     protected function applyFilter(Builder $query): void
     {
-        if (!empty($this->filter)) {
+        if (! empty($this->filter)) {
             $fields = $this->filter->fields();
 
         }

@@ -61,14 +61,14 @@ class BaseResource extends JsonResource
         return $this->toIndexArray($request);
     }
 
-    public function toShowArray(Request $request): array
+    public function toIndexArray(Request $request): array
     {
         return parent::toArray($request);
     }
 
-    public function toIndexArray(Request $request): array
+    public function toShowArray(Request $request): array
     {
-        return parent::toArray($request);
+        return $this->toIndexArray($request);
     }
 
     public function toSearchArray(Request $request): array

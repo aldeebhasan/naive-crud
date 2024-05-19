@@ -46,7 +46,7 @@ trait UpdateTrait
         $key = $this->getModelKey();
         foreach ($data['resources'] as $id => $itemData) {
             $item = $items->firstWhere($key, $id);
-            if (!$item) continue;
+            if (! $item) continue;
 
             $itemData = array_merge($itemData, $this->extraUpdateData());
             $item->update($itemData);
