@@ -8,7 +8,7 @@ trait AuthorizeTrait
 {
     protected bool $authorize = true;
 
-    protected ?string $guard;
+    protected ?string $guard = null;
 
     private ?User $user;
 
