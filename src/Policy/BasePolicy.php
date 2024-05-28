@@ -8,7 +8,7 @@ class BasePolicy
 {
     protected string $key;
 
-    protected string $keyDelimiter = '_';
+    private string $keyDelimiter = '_';
 
     public function __construct()
     {
