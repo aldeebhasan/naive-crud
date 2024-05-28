@@ -10,5 +10,6 @@ return [
     'image_height' => env('NC_IMAGE_MAX_HEIGHT'),
     'image_thumbnail' => env('NC_IMAGE_THUMBNAIL', false),
     'image_thumbnail_width' => env('NC_IMAGE_THUMBNAIL_WIDTH', 200),
-    'auth_guard' => env('NC_AUTH_GUARD', 'api'),
+    'auth_guard' => env('NC_AUTH_GUARD'),
+    'auth_admin_guard' => env('NC_AUTH_ADMIN_GUARD'),
 ];

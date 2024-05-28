@@ -8,6 +8,8 @@ trait AuthorizeTrait
 {
     protected bool $authorize = true;
 
+    protected ?string $guard;
+
     private ?User $user;
 
     protected string|array $indexAbility = 'index';
@@ -30,7 +32,7 @@ trait AuthorizeTrait
 
     protected function can(string|array $ability, $model = null): bool
     {
-        if (! $this->authorize && empty($ability)) {
+        if (!$this->authorize && empty($ability)) {
             return true;
         }
 
@@ -114,7 +116,7 @@ trait AuthorizeTrait
 
     public function resolveUser(): ?User
     {
-        $this->user ??= auth()->guard(config('naive-crud.auth_guard'))->user();
+        $this->user ??= auth()->guard($this->guard /*?? config('naive-crud.auth_guard')*/)->user();
 
         return $this->user;
     }
