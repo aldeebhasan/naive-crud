@@ -30,7 +30,7 @@ class CreateOperationTest extends FeatureTestCase
         $response->assertStatus(403);
     }
 
-    public function test_create_with__data()
+    public function test_create_with_data()
     {
         Gate::define('create_blogs', fn () => true);
         $route = route('api.blogs.store');

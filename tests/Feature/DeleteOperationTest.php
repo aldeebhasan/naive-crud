@@ -15,7 +15,7 @@ class DeleteOperationTest extends FeatureTestCase
 
     public function test_delete_without_authorization()
     {
-        $blog = factory(Blog::class)->create();
+        $blog = Blog::factory()->create();
         $route = route('api.blogs.destroy', ['blog' => $blog->id]);
         $response = $this->delete($route);
         $response->assertStatus(403);
@@ -23,7 +23,7 @@ class DeleteOperationTest extends FeatureTestCase
 
     public function test_delete_successfully()
     {
-        $blog = factory(Blog::class)->create();
+        $blog = Blog::factory()->create();
         Gate::define('delete_blogs', fn () => true);
         $route = route('api.blogs.destroy', ['blog' => $blog->id]);
         $response = $this->delete($route);
@@ -32,7 +32,7 @@ class DeleteOperationTest extends FeatureTestCase
 
     public function test_bulk_delete()
     {
-        $blogs = factory(Blog::class)->times(2)->create();
+        $blogs = Blog::factory()->times(2)->create();
 
         Gate::define('delete_blogs', fn () => true);
         $resources = ['resources' => $blogs->pluck('id')->toArray()];

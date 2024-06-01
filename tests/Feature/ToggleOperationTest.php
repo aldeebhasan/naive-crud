@@ -17,7 +17,7 @@ class ToggleOperationTest extends FeatureTestCase
 
     public function test_toggle_without_authorization()
     {
-        $blogs = factory(Blog::class)->times(2)->create();
+        $blogs = Blog::factory()->times(2)->create();
         $route = route('api.blogs.toggle');
         $response = $this->put($route, ['resources' => $blogs->pluck('id')->toArray()]);
         $response->assertStatus(403);
@@ -25,7 +25,7 @@ class ToggleOperationTest extends FeatureTestCase
 
     public function test_update_with_missing_data()
     {
-        $blogs = factory(Blog::class)->times(2)->create();
+        $blogs = Blog::factory()->times(2)->create();
         Gate::define('update_blogs', fn () => true);
         $route = route('api.blogs.toggle');
         $response = $this->put($route, ['resources' => $blogs->pluck('id')->toArray()]);
@@ -44,7 +44,7 @@ class ToggleOperationTest extends FeatureTestCase
             }
         );
 
-        $blogs = factory(Blog::class)->times(2)->create();
+        $blogs = Blog::factory()->times(2)->create();
         Gate::define('update_blogs', fn () => true);
         $route = route('api.blogs.toggle');
         $data = [

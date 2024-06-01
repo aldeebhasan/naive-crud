@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->foreignId('user_id');
             $table->foreignId('blog_id');
             $table->text('content');
+            $table->boolean('active')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

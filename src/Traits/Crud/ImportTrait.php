@@ -2,6 +2,7 @@
 
 namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
+use Aldeebhasan\NaiveCrud\Contracts\ExcelUI;
 use Aldeebhasan\NaiveCrud\Excel\Export\TemplateExport;
 use Aldeebhasan\NaiveCrud\Excel\Import\ModelImport;
 use Aldeebhasan\NaiveCrud\Exception\NCException;
@@ -35,8 +36,9 @@ trait ImportTrait
         $this->can($this->getImportAbility());
 
         $name = Str::snake(Str::pluralStudly(class_basename($this->model)));
-        if (method_exists($this->model, 'importFields')) {
-            $fields = $this->model::importFields();
+
+        if (! empty(class_implements($this->model)[ExcelUI::class])){
+            $fields = $this->model::headerFields();
 
             return Excel::download(new TemplateExport($fields), "{$name}-template.csv");
         }

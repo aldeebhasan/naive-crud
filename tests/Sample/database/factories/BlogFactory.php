@@ -1,14 +1,22 @@
 <?php
 
+namespace Aldeebhasan\NaiveCrud\Test\Sample\Database\Factories;
+
 use Aldeebhasan\NaiveCrud\Test\Sample\App\Models\Blog;
 use Aldeebhasan\NaiveCrud\Test\Sample\App\Models\User;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Blog::class, function (Faker $faker) {
-    return [
-        'title' => $faker->text(10),
-        'description' => $faker->text,
-        'user_id' => factory(User::class),
-        'image' => $faker->imageUrl,
-    ];
-});
+class BlogFactory extends Factory
+{
+    protected $model = Blog::class;
+
+    public function definition(): array
+    {
+        return [
+            'title' => fake()->text(20),
+            'description' => fake()->text,
+            'user_id' => User::factory(),
+            'image' => fake()->imageUrl,
+        ];
+    }
+}

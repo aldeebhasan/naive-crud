@@ -11,7 +11,7 @@ class ModelQueryExport extends ModelExport implements FromQuery
     {
     }
 
-    public function query()
+    public function query(): Builder
     {
         return $this->builder;
     }

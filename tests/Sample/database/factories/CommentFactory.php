@@ -1,15 +1,23 @@
 <?php
 
+namespace Aldeebhasan\NaiveCrud\Test\Sample\Database\Factories;
+
 use Aldeebhasan\NaiveCrud\Test\Sample\App\Models\Blog;
 use Aldeebhasan\NaiveCrud\Test\Sample\App\Models\Comment;
 use Aldeebhasan\NaiveCrud\Test\Sample\App\Models\User;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Comment::class, function (Faker $faker) {
-    return [
-        'content' => $faker->text,
-        'user_id' => factory(User::class),
-        'blog_id' => factory(Blog::class),
-        'image' => $faker->imageUrl,
-    ];
-});
+class CommentFactory extends Factory
+{
+    protected $model = Comment::class;
+
+    public function definition(): array
+    {
+        return [
+            'content' => fake()->text(25),
+            'user_id' => User::factory(),
+            'blog_id' => Blog::factory(),
+            'active' => true,
+        ];
+    }
+}

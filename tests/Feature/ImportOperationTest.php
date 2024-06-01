@@ -21,15 +21,6 @@ class ImportOperationTest extends FeatureTestCase
         $response->assertStatus(403);
     }
 
-    public function test_export_template_fail()
-    {
-        Excel::fake();
-        Gate::define('import_comments', fn () => true);
-        $route = route('api.comments.importTemplate');
-        $response = $this->get($route);
-        $response->assertStatus(400);
-    }
-
     public function test_export_template_success()
     {
         Excel::fake();

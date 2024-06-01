@@ -14,7 +14,7 @@ class ExportOperationTest extends FeatureTestCase
         $this->login();
     }
 
-    public function test_iexport_without_authorization()
+    public function test_export_without_authorization()
     {
         $route = route('api.blogs.export');
         $response = $this->get($route);
@@ -23,7 +23,7 @@ class ExportOperationTest extends FeatureTestCase
 
     public function test_export_page_success()
     {
-        factory(Blog::class)->times(5)->create();
+        Blog::factory()->times(5)->create();
         Excel::fake();
         Gate::define('export_blogs', fn () => true);
         $route = route('api.blogs.export');
@@ -34,7 +34,7 @@ class ExportOperationTest extends FeatureTestCase
 
     public function test_export_all_success()
     {
-        factory(Blog::class)->times(5)->create();
+        Blog::factory()->times(5)->create();
         Excel::fake();
         Gate::define('export_blogs', fn () => true);
         $route = route('api.blogs.export', ['target' => 'all']);

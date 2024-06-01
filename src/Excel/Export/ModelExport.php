@@ -2,6 +2,7 @@
 
 namespace Aldeebhasan\NaiveCrud\Excel\Export;
 
+use Aldeebhasan\NaiveCrud\Contracts\ExcelUI;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -21,7 +22,7 @@ class ModelExport implements WithMapping, WithHeadings
 
     public function map($row): array
     {
-        if (method_exists($row, 'formatExportItem')) {
+        if ($row instanceof ExcelUI) {
             return $row->formatExportItem();
         }
 
@@ -30,8 +31,8 @@ class ModelExport implements WithMapping, WithHeadings
 
     public function headings(): array
     {
-        if (method_exists($this->model, 'importFields')) {
-            return $this->model::importFields();
+        if (! empty(class_implements($this->model)[ExcelUI::class])){
+            return $this->model::headerFields();
         }
 
         return [];

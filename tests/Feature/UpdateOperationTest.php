@@ -24,7 +24,7 @@ class UpdateOperationTest extends FeatureTestCase
 
     public function test_update_without_authorization()
     {
-        $blog = factory(Blog::class)->create();
+        $blog = Blog::factory()->create();
         $route = route('api.blogs.update', ['blog' => $blog->id]);
         $response = $this->put($route, $this->payload);
         $response->assertStatus(403);
@@ -32,7 +32,7 @@ class UpdateOperationTest extends FeatureTestCase
 
     public function test_update_with_missing_data()
     {
-        $blog = factory(Blog::class)->create();
+        $blog = Blog::factory()->create();
         Gate::define('update_blogs', fn () => true);
         $route = route('api.blogs.update', ['blog' => $blog->id]);
         $response = $this->put($route, $this->payload);
@@ -41,7 +41,7 @@ class UpdateOperationTest extends FeatureTestCase
 
     public function test_update_with_full_data()
     {
-        $blog = factory(Blog::class)->create();
+        $blog = Blog::factory()->create();
         app()->bind(
             ComponentResolver::class,
             function () {
@@ -63,7 +63,7 @@ class UpdateOperationTest extends FeatureTestCase
 
     public function test_update_with_custom_resource()
     {
-        $blog = factory(Blog::class)->create();
+        $blog = Blog::factory()->create();
         app()->bind(
             ComponentResolver::class,
             function () {
@@ -86,7 +86,7 @@ class UpdateOperationTest extends FeatureTestCase
 
     public function test_bulk_update_with_full_data()
     {
-        $blogs = factory(Blog::class)->times(2)->create();
+        $blogs = Blog::factory()->times(2)->create();
         app()->bind(
             ComponentResolver::class,
             function () {

@@ -2,6 +2,7 @@
 
 namespace Aldeebhasan\NaiveCrud\Excel\Import;
 
+use Aldeebhasan\NaiveCrud\Contracts\ExcelUI;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
@@ -16,7 +17,7 @@ readonly class ModelImport implements ToModel, WithChunkReading, WithBatchInsert
 
     public function model(array $row)
     {
-        if (method_exists($this->model, 'formatImportItem')) {
+        if (! empty(class_implements($this->model)[ExcelUI::class])){
             $row = $this->model::formatImportItem($row, $this->user);
 
             return new $this->model($row);

@@ -38,7 +38,7 @@ class IndexOperationTest extends FeatureTestCase
 
     public function test_index_with_data()
     {
-        $items = factory(Blog::class)->times(5)->create();
+        $items = Blog::factory()->times(5)->create();
         Gate::define('index_blogs', fn () => true);
         $route = route('api.blogs.index');
         $response = $this->get($route);
@@ -65,7 +65,7 @@ class IndexOperationTest extends FeatureTestCase
             }
         );
 
-        $items = factory(Blog::class)->times(5)->create();
+        $items = Blog::factory()->times(5)->create();
         Gate::define('index_blogs', fn () => true);
         $route = route('api.blogs.index');
         $response = $this->get($route);
@@ -104,7 +104,7 @@ class IndexOperationTest extends FeatureTestCase
             }
         );
 
-        $items = factory(Blog::class)->times(5)->create();
+        $items = Blog::factory()->times(5)->create();
         Gate::define('index_blogs', fn () => true);
         $route = route('api.blogs.index', ['filters' => ['id' => $items->first()->id]]);
         $response = $this->get($route);
@@ -136,7 +136,7 @@ class IndexOperationTest extends FeatureTestCase
             }
         );
 
-        $items = factory(Blog::class)->times(5)->create();
+        $items = Blog::factory()->times(5)->create();
         Gate::define('index_blogs', fn () => true);
         $route = route('api.blogs.index', ['sorts' => ['id' => 'desc']]);
         $response = $this->get($route);

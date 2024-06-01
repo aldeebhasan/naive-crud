@@ -13,7 +13,7 @@ class ShowOperationTest extends FeatureTestCase
     {
         parent::setUp();
         $this->login();
-        $this->blog = factory(Blog::class)->create(['user_id' => $this->user->id]);
+        $this->blog = Blog::factory()->create(['user_id' => $this->user->id]);
     }
 
     public function test_show_without_authorization()

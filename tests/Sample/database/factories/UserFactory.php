@@ -1,13 +1,21 @@
 <?php
 
+namespace Aldeebhasan\NaiveCrud\Test\Sample\Database\Factories;
+
 use Aldeebhasan\NaiveCrud\Test\Sample\App\Models\User;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 
-$factory->define(User::class, function (Faker $faker) {
-    return [
-        'name' => $faker->name,
-        'email' => $faker->safeEmail,
-        'password' => Hash::make($faker->words(3, true)),
-    ];
-});
+class UserFactory extends Factory
+{
+    protected $model = User::class;
+
+    public function definition(): array
+    {
+        return [
+            'name' => fake()->name,
+            'email' => fake()->safeEmail,
+            'password' => Hash::make(fake()->words(3, true)),
+        ];
+    }
+}

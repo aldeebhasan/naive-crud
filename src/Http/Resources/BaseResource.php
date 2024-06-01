@@ -73,6 +73,6 @@ class BaseResource extends JsonResource
 
     public function toSearchArray(Request $request): array
     {
-        return parent::toArray($request);
+        return $this->toIndexArray($request);
     }
 }

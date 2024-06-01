@@ -17,7 +17,7 @@ class FeatureTestCase extends TestCase
 
     protected function login(User $user = null, $driver = 'api')
     {
-        $this->user = $user ?? factory(User::class)->create();
+        $this->user = $user ?? User::factory()->create();
         $this->actingAs($this->user, $driver);
     }
 }
