@@ -18,7 +18,7 @@ class CommentController extends BaseController
 
     protected ?string $modelResource = CommentResource::class;
 
-    protected bool $exportAllShouldQueue = false;
+    protected bool $exportAllShouldQueue = true;
 
     protected function extraStoreData(): array
     {

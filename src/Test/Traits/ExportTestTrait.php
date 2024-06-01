@@ -2,9 +2,11 @@
 
 namespace Aldeebhasan\NaiveCrud\Test\Traits;
 
+use Aldeebhasan\NaiveCrud\Logic\Managers\FileManager;
 use Illuminate\Support\Facades\Gate;
 use Maatwebsite\Excel\Facades\Excel;
 
+/**@property   bool $exportAllShouldQueue */
 trait ExportTestTrait
 {
     public function test_export_single_page()
@@ -33,7 +35,13 @@ trait ExportTestTrait
         Excel::fake();
         $response = $this->get($route);
         $response->assertOk();
-        Excel::assertDownloaded($this->getFileName().'_all.csv');
+        $fileName = $this->getFileName().'_all.csv';
+        if (! empty($this->exportAllShouldQueue)) {
+            $storagePath = FileManager::make()->getStoragePath("exports/{$fileName}");
+            Excel::assertQueued($storagePath);
+        } else {
+            Excel::assertDownloaded($fileName);
+        }
 
     }
 

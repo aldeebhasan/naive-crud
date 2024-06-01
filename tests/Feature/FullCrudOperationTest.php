@@ -19,6 +19,8 @@ class FullCrudOperationTest extends FeatureTestCase implements TestUI
     use StoreTestTrait, UpdateTestTrait, ShowTestTrait, SearchTestTrait, IndexTestTrait,
         ImportTestTrait, ExportTestTrait, DeleteTestTrait;
 
+    public bool $exportAllShouldQueue = true;
+
     protected function setUp(): void
     {
         parent::setUp();

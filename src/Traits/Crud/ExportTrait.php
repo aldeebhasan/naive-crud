@@ -18,7 +18,7 @@ trait ExportTrait
 {
     protected ?string $completedJobNotification = null;
 
-    protected bool $exportAllShouldQueue = true;
+    protected bool $exportAllShouldQueue = false;
 
     protected function exportQuery(Builder $query): Builder
     {

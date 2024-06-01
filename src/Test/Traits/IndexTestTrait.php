@@ -22,7 +22,7 @@ trait IndexTestTrait
         return [
             'data' => [
                 'items' => [
-                    '*' => $this->searchItemStructure(),
+                    '*' => $this->indexItemStructure(),
                 ],
                 'meta' => [
                     'current_page', 'from', 'last_page', 'per_page', 'total',
