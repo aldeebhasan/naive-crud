@@ -1,6 +1,6 @@
 <?php
 
-namespace Aldeebhasan\NaiveCrud\Test\Base;
+namespace Aldeebhasan\NaiveCrud\Test;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 

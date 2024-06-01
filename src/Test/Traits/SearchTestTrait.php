@@ -1,6 +1,6 @@
 <?php
 
-namespace Aldeebhasan\NaiveCrud\Test\Base\Traits;
+namespace Aldeebhasan\NaiveCrud\Test\Traits;
 
 use Illuminate\Support\Facades\Gate;
 

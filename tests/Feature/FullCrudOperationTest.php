@@ -2,16 +2,16 @@
 
 namespace Aldeebhasan\NaiveCrud\Test\Feature;
 
-use Aldeebhasan\NaiveCrud\Test\Base\TestUI;
-use Aldeebhasan\NaiveCrud\Test\Base\Traits\DeleteTestTrait;
-use Aldeebhasan\NaiveCrud\Test\Base\Traits\ExportTestTrait;
-use Aldeebhasan\NaiveCrud\Test\Base\Traits\ImportTestTrait;
-use Aldeebhasan\NaiveCrud\Test\Base\Traits\IndexTestTrait;
-use Aldeebhasan\NaiveCrud\Test\Base\Traits\SearchTestTrait;
-use Aldeebhasan\NaiveCrud\Test\Base\Traits\ShowTestTrait;
-use Aldeebhasan\NaiveCrud\Test\Base\Traits\StoreTestTrait;
-use Aldeebhasan\NaiveCrud\Test\Base\Traits\UpdateTestTrait;
 use Aldeebhasan\NaiveCrud\Test\Sample\App\Models\Comment;
+use Aldeebhasan\NaiveCrud\Test\TestUI;
+use Aldeebhasan\NaiveCrud\Test\Traits\DeleteTestTrait;
+use Aldeebhasan\NaiveCrud\Test\Traits\ExportTestTrait;
+use Aldeebhasan\NaiveCrud\Test\Traits\ImportTestTrait;
+use Aldeebhasan\NaiveCrud\Test\Traits\IndexTestTrait;
+use Aldeebhasan\NaiveCrud\Test\Traits\SearchTestTrait;
+use Aldeebhasan\NaiveCrud\Test\Traits\ShowTestTrait;
+use Aldeebhasan\NaiveCrud\Test\Traits\StoreTestTrait;
+use Aldeebhasan\NaiveCrud\Test\Traits\UpdateTestTrait;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class FullCrudOperationTest extends FeatureTestCase implements TestUI
