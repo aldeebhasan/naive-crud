@@ -32,7 +32,7 @@ trait AuthorizeTrait
 
     protected function can(string|array $ability, $model = null): bool
     {
-        if (!$this->authorize && empty($ability)) {
+        if (! $this->authorize && empty($ability)) {
             return true;
         }
 

@@ -7,9 +7,14 @@ use Aldeebhasan\NaiveCrud\Http\Resources\BaseResource;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 trait UpdateTrait
 {
+    protected ?string $updateAction = null;
+
+    protected ?string $bulkUpdateAction = null;
+
     /** @param BaseRequest $request */
     public function update(Request $request, $id): JsonResponse
     {
@@ -22,7 +27,10 @@ trait UpdateTrait
         $data = array_merge($data, $this->extraUpdateData());
 
         $this->beforeUpdateHook($request, $item);
-        $item->update($data);
+
+        $action = $this->resolveUpdateAction();
+        App::make($action)->setModel($item)->setData($data)->handle();
+
         $this->afterUpdateHook($request, $item);
 
         $data = $this->formatUpdateResponse($item);
@@ -40,6 +48,8 @@ trait UpdateTrait
         $query = $this->baseQueryResolver($request)->build();
 
         $this->beforeBulkUpdateHook($request);
+
+        $action = $this->resolveBulkUpdateAction();
         $count = 0;
         $ids = array_keys($data['resources']);
         $items = $query->whereKey($ids)->get();
@@ -49,9 +59,10 @@ trait UpdateTrait
             if (! $item) continue;
 
             $itemData = array_merge($itemData, $this->extraUpdateData());
-            $item->update($itemData);
+            App::make($action)->setModel($item)->setData($itemData)->handle();
             $count++;
         }
+
         $this->afterBulkUpdateHook($request);
 
         return $this->success(message: __('NaiveCrud::messages.bulk-updated', ['count' => $count]));
@@ -67,5 +78,15 @@ trait UpdateTrait
         $resource = $this->modelResource ?? BaseResource::class;
 
         return $resource::makeCustom($item, $this->resolveUser(), false)->resolve();
+    }
+
+    private function resolveUpdateAction(): string
+    {
+        return $this->componentsResolver->resolveModelAction('update', $this->updateAction);
+    }
+
+    private function resolveBulkUpdateAction(): string
+    {
+        return $this->componentsResolver->resolveModelAction('bulkUpdate', $this->bulkUpdateAction ?? $this->updateAction);
     }
 }

@@ -2,6 +2,9 @@
 
 namespace Aldeebhasan\NaiveCrud\Logic\Resolvers;
 
+use Aldeebhasan\NaiveCrud\Actions\CreatAction;
+use Aldeebhasan\NaiveCrud\Actions\DeleteAction;
+use Aldeebhasan\NaiveCrud\Actions\UpdateAction;
 use Aldeebhasan\NaiveCrud\Http\Requests\BaseRequest;
 use Aldeebhasan\NaiveCrud\Http\Resources\BaseResource;
 use Aldeebhasan\NaiveCrud\Traits\Makable;
@@ -17,6 +20,8 @@ class ComponentResolver
     protected string $requestClassesNamespace = 'App\\Http\\Requests\\';
 
     protected string $resourceClassesNamespace = 'App\\Http\\Resources\\';
+
+    protected string $actionClassesNamespace = 'App\\Actions\\';
 
     public function __construct(protected string $modelClass)
     {
@@ -58,6 +63,30 @@ class ComponentResolver
         }
 
         return BaseResource::class;
+    }
+
+    public function resolveModelAction(string $action, ?string $actionClass = null): ?string
+    {
+        if ($actionClass && class_exists($actionClass)) {
+            return $actionClass;
+        }
+        $requestClassName = sprintf(
+            '%s%s%s%s',
+            $this->actionClassesNamespace,
+            $action,
+            class_basename($this->modelClass),
+            'Action'
+        );
+
+        if (class_exists($requestClassName)) {
+            return $requestClassName;
+        }
+
+        return match ($action) {
+            'create', 'bulkCreate' => CreatAction::class,
+            'update', 'bulkUpdate' => UpdateAction::class,
+            'delete', 'bulkDelete' => DeleteAction::class,
+        };
     }
 
     public function bindRequestForm(string $requestClass): void

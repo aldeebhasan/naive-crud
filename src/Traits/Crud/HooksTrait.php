@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
  * @method  afterShowHook(Request $request, Model $model)
  * @method  beforeUpdateHook(Request $request, Model $model)
  * @method  afterUpdateHook(Request $request, Model $model)
- * @method  beforeStoreHook(Request $request, Model $model)
+ * @method  beforeStoreHook(Request $request)
  * @method  afterStoreHook(Request $request, Model $model)
  * @method  beforeDeleteHook(Request $request, Model $model)
  * @method  afterDeleteHook(Request $request, Model $model)

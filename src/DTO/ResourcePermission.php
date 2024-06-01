@@ -11,12 +11,13 @@ final readonly class ResourcePermission
     use Makable;
 
     public string $resource;
+
     public array|string $actions;
 
     public function __construct(
         public string $guard,
-        string        $resource,
-        array|string  $actions
+        string $resource,
+        array|string $actions
     )
     {
         $modelClass = class_basename($resource);

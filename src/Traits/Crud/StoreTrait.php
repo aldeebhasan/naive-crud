@@ -7,9 +7,14 @@ use Aldeebhasan\NaiveCrud\Http\Resources\BaseResource;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 trait StoreTrait
 {
+    protected ?string $createAction = null;
+
+    protected ?string $bulkCreateAction = null;
+
     /** @param BaseRequest $request */
     public function store(Request $request): JsonResponse
     {
@@ -17,10 +22,11 @@ trait StoreTrait
         $data = $request->validated();
         $data = array_merge($data, $this->extraStoreData());
 
-        $item = new $this->model($data);
+        $this->beforeStoreHook($request);
 
-        $this->beforeStoreHook($request, $item);
-        $item->save();
+        $action = $this->resolveCreateAction();
+        $item = App::make($action)->setModelClass($this->model)->setData($data)->handle();
+
         $this->afterStoreHook($request, $item);
 
         $data = $this->formatCreateResponse($item);
@@ -35,11 +41,12 @@ trait StoreTrait
         $data = $request->validated();
 
         $this->beforeBulkStoreHook($request);
+
         $count = 0;
+        $action = $this->resolveBulkCreateAction();
         foreach ($data['resources'] as $itemData) {
             $itemData = array_merge($itemData, $this->extraStoreData());
-            $item = new $this->model($itemData);
-            $item->save();
+            App::make($action)->setModelClass($this->model)->setData($itemData)->handle();
             $count++;
         }
 
@@ -58,5 +65,15 @@ trait StoreTrait
         $resource = $this->modelResource ?? BaseResource::class;
 
         return $resource::makeCustom($item, $this->resolveUser(), false)->resolve();
+    }
+
+    private function resolveCreateAction(): string
+    {
+        return $this->componentsResolver->resolveModelAction('create', $this->createAction);
+    }
+
+    private function resolveBulkCreateAction(): string
+    {
+        return $this->componentsResolver->resolveModelAction('bulkCreate', $this->bulkCreateAction ?? $this->createAction);
     }
 }

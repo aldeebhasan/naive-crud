@@ -4,9 +4,14 @@ namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 trait DeleteTrait
 {
+    protected ?string $deleteAction = null;
+
+    protected ?string $bulkDeleteAction = null;
+
     public function destroy(Request $request, $id): JsonResponse
     {
 
@@ -16,7 +21,10 @@ trait DeleteTrait
         $this->can($this->getDeleteAbility(), $item);
 
         $this->beforeDeleteHook($request, $item);
-        $item->delete();
+
+        $action = $this->resolveDeleteAction();
+        App::make($action)->setModel($item)->handle();
+
         $this->afterDeleteHook($request, $item);
 
         return $this->success(message: __('NaiveCrud::messages.deleted'));
@@ -34,10 +42,23 @@ trait DeleteTrait
         $query = $this->baseQueryResolver($request)->build();
 
         $this->beforeBulkDeleteHook($request);
+
         $ids = $validated['resources'];
-        $count = $query->whereKey($ids)->delete();
+        $action = $this->resolveBulkDeleteAction();
+        $items = $query->whereKey($ids)->get()->each(fn ($item) => App::make($action)->setModel($item)->handle());
+
         $this->afterBulkDeleteHook($request);
 
-        return $this->success(message: __('NaiveCrud::messages.bulk-deleted', ['count' => $count]));
+        return $this->success(message: __('NaiveCrud::messages.bulk-deleted', ['count' => $items->count()]));
+    }
+
+    private function resolveDeleteAction(): string
+    {
+        return $this->componentsResolver->resolveModelAction('delete', $this->deleteAction);
+    }
+
+    private function resolveBulkDeleteAction(): string
+    {
+        return $this->componentsResolver->resolveModelAction('bulkDelete', $this->bulkDeleteAction ?? $this->deleteAction);
     }
 }
