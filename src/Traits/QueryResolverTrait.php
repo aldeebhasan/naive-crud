@@ -16,7 +16,7 @@ trait QueryResolverTrait
     public function fullQueryResolver(Request $request): QueryResolver
     {
         return $this->baseQueryResolver($request)
-            ->setFilters($this->filters)
-            ->setSorters($this->sorters);
+            ->setFilters($this->getFilters())
+            ->setSorters($this->getSorters());
     }
 }

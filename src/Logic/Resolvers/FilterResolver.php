@@ -84,4 +84,27 @@ class FilterResolver
         }
 
     }
+
+    public function render(): array
+    {
+        $resultFields = [];
+        foreach ($this->filters as $filter) {
+            $fields = $filter->fields();
+            foreach ($fields as $field) {
+                $resultFields[$field->field] = $this->renderSingleField($field);
+            }
+        }
+
+        return array_values($resultFields);
+    }
+
+    private function renderSingleField(FilterField $field): array
+    {
+        return [
+            'type' => $field->type,
+            'name' => $field->field,
+            'label' => $field->label ?? str($field->field)->title()->toString(),
+            'value' => (string) ($field->value ?? Arr::get($this->values, $field->field)),
+        ];
+    }
 }

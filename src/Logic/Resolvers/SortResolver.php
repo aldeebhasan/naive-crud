@@ -58,8 +58,8 @@ class SortResolver
 
             if (! in_array($field->field, array_keys($this->values))) continue;
 
-            $direction = Arr::get($this->values, $field->field) ?? $field->defaultDirection;
-            $direction = in_array($direction, ['asc', 'desc']) ? $direction : $field->defaultDirection;
+            $direction = Arr::get($this->values, $field->field) ?? $field->value;
+            $direction = in_array($direction, ['asc', 'desc']) ? $direction : $field->value;
 
             if (! empty($field->callback) && is_callable($field->callback)) {
                 call_user_func($field->callback, $query);
@@ -68,5 +68,35 @@ class SortResolver
             }
         }
 
+    }
+
+    public function render(): array
+    {
+        $resultFields = [];
+        foreach ($this->sorts as $sort) {
+            $fields = $sort->fields();
+            foreach ($fields as $field) {
+                $resultFields[$field->field] = $this->renderSingleField($field);
+            }
+        }
+
+        return array_values($resultFields);
+    }
+
+    private function renderSingleField(SortField $field): array
+    {
+        $direction = Arr::get($this->values, $field->field) ?? $field->value;
+        $direction = in_array($direction, ['asc', 'desc']) ? $direction : $field->value;
+
+        return [
+            'type' => 'select',
+            'name' => $field->field,
+            'label' => $field->label ?? str($field->field)->title()->toString(),
+            'value' => $direction,
+            'options' => [
+                'asc' => 'Ascending',
+                'desc' => 'Descending',
+            ],
+        ];
     }
 }

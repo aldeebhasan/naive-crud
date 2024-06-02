@@ -10,8 +10,18 @@ class NCResourceRegistrar extends BaseResourceRegistrar
     protected $resourceDefaults = [
         'search', 'import', 'importTemplate', 'export',
         'bulkStore', 'bulkUpdate', 'bulkDestroy',
-        'toggle', 'index', 'store', 'show', 'update', 'destroy',
+        'fields', 'toggle', 'index', 'store', 'show', 'update', 'destroy',
     ];
+
+    protected function addResourceFields(string $name, string $base, string $controller, array $options): Route
+    {
+        $uri = $this->getResourceUri($name).'/fields';
+
+        $action = $this->getResourceAction($name, $controller, 'fields', $options);
+
+        return $this->router->get($uri, $action);
+
+    }
 
     protected function addResourceToggle(string $name, string $base, string $controller, array $options): Route
     {

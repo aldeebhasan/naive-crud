@@ -4,29 +4,24 @@ namespace Aldeebhasan\NaiveCrud\DTO;
 
 use Aldeebhasan\NaiveCrud\Traits\Makable;
 
-/**@method  static SortField make(string $field, ?string $column = null, ?string $defaultDirection = 'desc', callable $callback = null) */
+/**@method  static SortField make(string $field, ?string $column = null, ?string $value = 'desc', callable $callback = null) */
 final readonly class SortField
 {
     use Makable;
 
-    public string $field;
-
     public ?string $column;
-
-    public string $defaultDirection;
 
     public mixed $callback;
 
     public function __construct(
-        string $field,
+        public string $field,
         ?string $column = null,
-        ?string $defaultDirection = 'desc',
-        callable $callback = null
+        callable $callback = null,
+        public ?string $label = null,
+        public ?string $value = 'desc',
     )
     {
-        $this->field = $field;
         $this->column = $column ?? $field;
-        $this->defaultDirection = $defaultDirection;
         $this->callback = $callback;
     }
 }

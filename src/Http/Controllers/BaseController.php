@@ -99,4 +99,14 @@ abstract class BaseController extends Controller
     {
         return (new $this->model)->getKeyName();
     }
+
+    public function getFilters(): array
+    {
+        return $this->filters ?? [];
+    }
+
+    public function getSorters(): array
+    {
+        return $this->sorters ?? [];
+    }
 }

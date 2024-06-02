@@ -30,7 +30,7 @@ class IndexOperationTest extends FeatureTestCase
 
     public function test_index_with_authorization()
     {
-        Gate::define('index_blogs', fn () => true);
+        Gate::define('index_blogs', fn() => true);
         $route = route('api.blogs.index');
         $response = $this->get($route);
         $response->assertStatus(200);
@@ -39,7 +39,7 @@ class IndexOperationTest extends FeatureTestCase
     public function test_index_with_data()
     {
         $items = Blog::factory()->times(5)->create();
-        Gate::define('index_blogs', fn () => true);
+        Gate::define('index_blogs', fn() => true);
         $route = route('api.blogs.index');
         $response = $this->get($route);
         $response->assertStatus(200);
@@ -66,7 +66,7 @@ class IndexOperationTest extends FeatureTestCase
         );
 
         $items = Blog::factory()->times(5)->create();
-        Gate::define('index_blogs', fn () => true);
+        Gate::define('index_blogs', fn() => true);
         $route = route('api.blogs.index');
         $response = $this->get($route);
         $response->assertStatus(200);
@@ -78,6 +78,46 @@ class IndexOperationTest extends FeatureTestCase
                 ],
             ],
         ]);
+    }
+
+
+    public function test_get_index_filters()
+    {
+        $filter = new class implements FilterUI {
+            public function fields(): array
+            {
+                return [
+                    new FilterField(field: 'id', operator: '='),
+                ];
+            }
+        };
+
+        $sorter = new class implements SortUI {
+            public function fields(): array
+            {
+                return [
+                    new SortField(field: 'id', value: 'asc'),
+                ];
+            }
+        };
+
+        app()->bind(
+            BlogController::class,
+            function () use ($filter, $sorter) {
+                $componentsResolverMock = \Mockery::mock(BlogController::class)->makePartial();
+                $componentsResolverMock->shouldReceive('resolveUser')->andReturn($this->user);
+                $componentsResolverMock->shouldReceive('getFilters')->andReturn([$filter]);
+                $componentsResolverMock->shouldReceive('getSorters')->andReturn([$sorter]);
+
+                return $componentsResolverMock;
+            }
+        );
+
+        Gate::define('index_blogs', fn() => true);
+        $route = route('api.blogs.fields', ['filters' => ['id' => -1]]);
+        $response = $this->get($route);
+        $response->dump();
+        $response->assertStatus(200);
     }
 
     public function test_index_with_filters()
@@ -105,7 +145,7 @@ class IndexOperationTest extends FeatureTestCase
         );
 
         $items = Blog::factory()->times(5)->create();
-        Gate::define('index_blogs', fn () => true);
+        Gate::define('index_blogs', fn() => true);
         $route = route('api.blogs.index', ['filters' => ['id' => $items->first()->id]]);
         $response = $this->get($route);
         $response->assertStatus(200);
@@ -118,7 +158,7 @@ class IndexOperationTest extends FeatureTestCase
             public function fields(): array
             {
                 return [
-                    new SortField(field: 'id', defaultDirection: 'asc'),
+                    new SortField(field: 'id', value: 'asc'),
                 ];
             }
         };
@@ -137,7 +177,7 @@ class IndexOperationTest extends FeatureTestCase
         );
 
         $items = Blog::factory()->times(5)->create();
-        Gate::define('index_blogs', fn () => true);
+        Gate::define('index_blogs', fn() => true);
         $route = route('api.blogs.index', ['sorts' => ['id' => 'desc']]);
         $response = $this->get($route);
         $response->assertStatus(200);

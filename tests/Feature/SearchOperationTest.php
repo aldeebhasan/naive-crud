@@ -120,7 +120,7 @@ class SearchOperationTest extends FeatureTestCase
             public function fields(): array
             {
                 return [
-                    new SortField(field: 'title', defaultDirection: 'asc'),
+                    new SortField(field: 'title', value: 'asc'),
                 ];
             }
         };

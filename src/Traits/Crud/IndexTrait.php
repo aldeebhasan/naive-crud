@@ -3,6 +3,8 @@
 namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
 use Aldeebhasan\NaiveCrud\Http\Resources\BaseResource;
+use Aldeebhasan\NaiveCrud\Logic\Resolvers\FilterResolver;
+use Aldeebhasan\NaiveCrud\Logic\Resolvers\SortResolver;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
@@ -41,17 +43,19 @@ trait IndexTrait
         return $this->success($data, __('NaiveCrud::messages.success'));
     }
 
+    public function fields(Request $request): JsonResponse
+    {
+        $this->can($this->getIndexAbility());
+
+        $data['filters'] = FilterResolver::make($request)->setFilters($this->getFilters())->render();
+        $data['sorters'] = SortResolver::make($request)->setSorters($this->getSorters())->render();
+
+        return $this->success($data, __('NaiveCrud::messages.success'));
+    }
+
     protected function getLimit(): ?int
     {
         return request('limit', null);
-    }
-
-    protected function applyFilter(Builder $query): void
-    {
-        if (! empty($this->filter)) {
-            $fields = $this->filter->fields();
-
-        }
     }
 
     protected function extraIndexData(): array
