@@ -14,7 +14,7 @@ class PendingResourceRegistration extends basePendingResourceRegistration
      */
     public function withoutBulk(): self
     {
-        $except = Arr::get($this->options, 'except');
+        $except = Arr::get($this->options, 'except', []);
 
         $except = array_merge($except, ['bulkStore', 'bulkUpdate', 'bulkDestroy']);
 
@@ -30,7 +30,7 @@ class PendingResourceRegistration extends basePendingResourceRegistration
      */
     public function withoutSearch(): self
     {
-        $except = Arr::get($this->options, 'except');
+        $except = Arr::get($this->options, 'except', []);
 
         $except = array_merge($except, ['search']);
 
@@ -46,7 +46,7 @@ class PendingResourceRegistration extends basePendingResourceRegistration
      */
     public function withoutImportExport(): self
     {
-        $except = Arr::get($this->options, 'except');
+        $except = Arr::get($this->options, 'except', []);
 
         $except = array_merge($except, ['import', 'importTemplate', 'export']);
 
