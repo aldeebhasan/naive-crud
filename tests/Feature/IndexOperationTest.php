@@ -114,9 +114,8 @@ class IndexOperationTest extends FeatureTestCase
         );
 
         Gate::define('index_blogs', fn() => true);
-        $route = route('api.blogs.fields', ['filters' => ['id' => -1]]);
+        $route = route('api.blogs.fields', ['filters' => ['id' => -1],'sorts' => ['id' => 2]]);
         $response = $this->get($route);
-        $response->dump();
         $response->assertStatus(200);
     }
 
