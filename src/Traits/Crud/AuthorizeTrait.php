@@ -116,7 +116,7 @@ trait AuthorizeTrait
 
     public function resolveUser(): ?User
     {
-        $this->user ??= auth()->guard($this->guard /*?? config('naive-crud.auth_guard')*/)->user();
+        $this->user ??= auth()->guard($this->guard)->user();
 
         return $this->user;
     }
