@@ -16,8 +16,8 @@ final readonly class ResourcePermission
 
     public function __construct(
         public string $guard,
-        string $resource,
-        array|string $actions
+        string        $resource,
+        array|string  $actions
     )
     {
         $modelClass = class_basename($resource);
@@ -25,14 +25,11 @@ final readonly class ResourcePermission
         $this->actions = is_string($actions) ? [$actions] : $actions;
     }
 
-    public function register(): void
+    public function register(callable $callback): void
     {
         foreach ($this->actions as $action) {
             $permissionName = "{$action}_{$this->resource}";
-            Permission::updateOrCreate([
-                'name' => $permissionName,
-                'guard_name' => $this->guard,
-            ]);
+            $callback($permissionName, $this->guard);
         }
     }
 }
