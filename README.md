@@ -11,7 +11,7 @@ Install using composer:
 composer require aldeebhasan/naive-crud
 ```
 
-After installation run the following code to publish the config:
+Optional: After installation run the following code to publish the config:
 
 ```
 php artisan vendor:publish --tag=naive-crud
@@ -19,10 +19,12 @@ php artisan vendor:publish --tag=naive-crud
 
 Basic Usage
 -----------
+This package will help yo to fully customize your crud and have a huge control over each part
+of your development> No more duplicated code will appear.
 
 ## License
 
-Laravel Cache Flusher package is licensed under [The MIT License (MIT)](LICENSE).
+Laravel Naive Crud package is licensed under [The MIT License (MIT)](LICENSE).
 
 ## Security contact information
 
