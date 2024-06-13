@@ -25,7 +25,8 @@
   "autoload-dev": {
     "psr-4": {
       "Aldeebhasan\\NaiveCrud\\Test\\": "tests/",
-      "Aldeebhasan\\NaiveCrud\\Test\\Sample\\App\\": "tests/Sample/app/"
+      "Aldeebhasan\\NaiveCrud\\Test\\Sample\\App\\": "tests/Sample/app/",
+      "Aldeebhasan\\NaiveCrud\\Test\\Sample\\Database\\Factories\\": "tests/Sample/database/factories"
     }
   },
   "require": {
