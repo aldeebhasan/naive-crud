@@ -63,7 +63,7 @@ class FileManager
 
     public function uploadImage(string $name = ''): array
     {
-        $extension = strtolower($this->file->getClientOriginalExtension()) === 'png' ?: 'jpeg';
+        $extension = strtolower($this->file->getClientOriginalExtension()) === 'png' ? 'png' : 'jpeg';
         $file = file_get_contents($this->file);
 
         $image = ImageManager::imagick()->read($file);

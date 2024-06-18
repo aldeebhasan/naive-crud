@@ -3,7 +3,6 @@
 namespace Aldeebhasan\NaiveCrud\DTO;
 
 use Aldeebhasan\NaiveCrud\Traits\Makable;
-use Spatie\Permission\Models\Permission;
 
 /**@method  static ResourcePermission make(string $guard, string $resource, array|string $actions = []) */
 final readonly class ResourcePermission
@@ -16,8 +15,8 @@ final readonly class ResourcePermission
 
     public function __construct(
         public string $guard,
-        string        $resource,
-        array|string  $actions
+        string $resource,
+        array|string $actions
     )
     {
         $modelClass = class_basename($resource);

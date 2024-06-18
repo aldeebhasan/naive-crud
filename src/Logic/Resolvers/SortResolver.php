@@ -56,12 +56,12 @@ class SortResolver
         /** @var SortField $field */
         foreach ($fields as $field) {
 
-            if (!in_array($field->field, array_keys($this->values))) continue;
+            if (! in_array($field->field, array_keys($this->values))) continue;
 
             $direction = Arr::get($this->values, $field->field) ?? $field->value;
             $direction = in_array($direction, ['asc', 'desc']) ? $direction : $field->value;
 
-            if (!empty($field->callback) && is_callable($field->callback)) {
+            if (! empty($field->callback) && is_callable($field->callback)) {
                 call_user_func($field->callback, $query);
             } else {
                 $query->orderBy($field->column, $direction);
