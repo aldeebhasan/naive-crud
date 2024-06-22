@@ -4,6 +4,7 @@ namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
 use Aldeebhasan\NaiveCrud\Http\Requests\BaseRequest;
 use Aldeebhasan\NaiveCrud\Http\Resources\BaseResource;
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -16,7 +17,7 @@ trait StoreTrait
     protected ?string $bulkCreateAction = null;
 
     /** @param BaseRequest $request */
-    public function store(Request $request): Response
+    public function store(Request $request): Response|Responsable
     {
         $this->can($this->getCreateAbility());
         $data = $request->validated();
@@ -29,13 +30,18 @@ trait StoreTrait
 
         $this->afterStoreHook($request, $item);
 
-        $data = $this->formatCreateResponse($item);
+        $data = $this->formatCreateItem($item);
 
-        return $this->success($data, __('NaiveCrud::messages.stored'), 201);
+        return $this->storeResponse(__('NaiveCrud::messages.stored'), $data);
+    }
+
+    protected function storeResponse(string $message, array $data): Response|Responsable
+    {
+        return $this->success($data, $message, 201);
     }
 
     /** @param BaseRequest $request */
-    public function bulkStore(Request $request): Response
+    public function bulkStore(Request $request): Response|Responsable
     {
         $this->can($this->getCreateAbility());
         $data = $request->validated();
@@ -52,7 +58,12 @@ trait StoreTrait
 
         $this->afterBulkStoreHook($request);
 
-        return $this->success(message: __('NaiveCrud::messages.bulk-stored', ['count' => $count]), status: 201);
+        return $this->bulkStoreResponse(__('NaiveCrud::messages.bulk-stored', ['count' => $count]));
+    }
+
+    protected function bulkStoreResponse(string $message): Response|Responsable
+    {
+        return $this->success(message: $message, status: 201);
     }
 
     protected function extraStoreData(): array
@@ -60,7 +71,7 @@ trait StoreTrait
         return [];
     }
 
-    protected function formatCreateResponse(Model $item): array
+    protected function formatCreateItem(Model $item): array
     {
         $resource = $this->modelResource ?? BaseResource::class;
 

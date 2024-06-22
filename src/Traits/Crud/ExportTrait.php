@@ -7,6 +7,7 @@ use Aldeebhasan\NaiveCrud\Excel\Export\ModelQueryExport;
 use Aldeebhasan\NaiveCrud\Http\Requests\BaseRequest;
 use Aldeebhasan\NaiveCrud\Jobs\CompletedExportJob;
 use Aldeebhasan\NaiveCrud\Logic\Managers\FileManager;
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -25,7 +26,7 @@ trait ExportTrait
     }
 
     /** @param BaseRequest $request */
-    public function export(Request $request): Response
+    public function export(Request $request): Response|Responsable
     {
         $this->can($this->getExportAbility());
 
@@ -63,9 +64,14 @@ trait ExportTrait
                 new CompletedExportJob(request()->user(), $assetPath, $this->completedJobNotification),
             ]);
 
-            return $this->success(message: __('NaiveCrud::messages.exported'));
+            return $this->exportResponse(__('NaiveCrud::messages.exported'));
         }
 
         return $handler->download($fileName);
+    }
+
+    protected function exportResponse(string $message): Response|Responsable
+    {
+        return $this->success(message: $message);
     }
 }

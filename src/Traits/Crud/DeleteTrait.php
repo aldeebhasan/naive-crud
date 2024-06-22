@@ -2,6 +2,7 @@
 
 namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,7 +13,7 @@ trait DeleteTrait
 
     protected ?string $bulkDeleteAction = null;
 
-    public function destroy(Request $request, $id): Response
+    public function destroy(Request $request, $id): Response|Responsable
     {
 
         $query = $this->baseQueryResolver($request)->build();
@@ -27,10 +28,15 @@ trait DeleteTrait
 
         $this->afterDeleteHook($request, $item);
 
-        return $this->success(message: __('NaiveCrud::messages.deleted'));
+        return $this->destroyResponse(__('NaiveCrud::messages.deleted'));
     }
 
-    public function bulkDestroy(Request $request): Response
+    protected function destroyResponse(string $message): Response|Responsable
+    {
+        return $this->success(message: $message);
+    }
+
+    public function bulkDestroy(Request $request): Response|Responsable
     {
         $this->can($this->getDeleteAbility());
 
@@ -49,7 +55,12 @@ trait DeleteTrait
 
         $this->afterBulkDeleteHook($request);
 
-        return $this->success(message: __('NaiveCrud::messages.bulk-deleted', ['count' => $items->count()]));
+        return $this->bulkDestroyResponse(__('NaiveCrud::messages.bulk-deleted', ['count' => $items->count()]));
+    }
+
+    protected function bulkDestroyResponse(string $message): Response|Responsable
+    {
+        return $this->success(message: $message);
     }
 
     private function resolveDeleteAction(): string

@@ -4,6 +4,7 @@ namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
 use Aldeebhasan\NaiveCrud\Http\Resources\BaseResource;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +18,7 @@ trait SearchTrait
         return $query;
     }
 
-    public function search(Request $request): Response
+    public function search(Request $request): Response|Responsable
     {
         $this->can($this->getIndexAbility());
 
@@ -30,13 +31,18 @@ trait SearchTrait
 
         $items = $query->paginate($this->getLimit());
 
-        $data = $this->formatSearchResponse($items);
+        $data = $this->formatSearchItems($items);
         $this->afterSearchHook($request);
 
-        return $this->success($data, __('NaiveCrud::messages.success'));
+        return $this->searchResponse(__('NaiveCrud::messages.success'), $data);
     }
 
-    protected function formatSearchResponse(Paginator $items): array
+    protected function searchResponse(string $message, array $data): Response|Responsable
+    {
+        return $this->success($data, $message);
+    }
+
+    protected function formatSearchItems(Paginator $items): array
     {
         $resource = $this->modelResource ?? BaseResource::class;
 

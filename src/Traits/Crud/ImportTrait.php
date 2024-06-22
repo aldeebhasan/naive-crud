@@ -7,6 +7,7 @@ use Aldeebhasan\NaiveCrud\Excel\Export\TemplateExport;
 use Aldeebhasan\NaiveCrud\Excel\Import\ModelImport;
 use Aldeebhasan\NaiveCrud\Exception\NCException;
 use Aldeebhasan\NaiveCrud\Http\Requests\BaseRequest;
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
@@ -15,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 trait ImportTrait
 {
     /** @param BaseRequest $request */
-    public function import(Request $request): Response
+    public function import(Request $request): Response|Responsable
     {
         $this->can($this->getImportAbility());
 
@@ -27,7 +28,12 @@ trait ImportTrait
         Excel::import(new ModelImport($this->model, $user), $file);
         $this->afterImportHook($request);
 
-        return $this->success(message: __('NaiveCrud::messages.imported'));
+        return $this->importResponse(__('NaiveCrud::messages.imported'));
+    }
+
+    protected function importResponse(string $message): Response|Responsable
+    {
+        return $this->success(message: $message);
     }
 
     public function importTemplate(Request $request): Response

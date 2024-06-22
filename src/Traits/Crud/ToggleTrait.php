@@ -3,13 +3,14 @@
 namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
 use Aldeebhasan\NaiveCrud\Http\Requests\BaseRequest;
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 trait ToggleTrait
 {
     /** @param BaseRequest $request */
-    public function toggle(Request $request): Response
+    public function toggle(Request $request): Response|Responsable
     {
         $this->can($this->getUpdateAbility());
 
@@ -25,6 +26,11 @@ trait ToggleTrait
 
         $this->afterToggleHook($request);
 
-        return $this->success(message: __('NaiveCrud::messages.bulk-updated', ['count' => $count]));
+        return $this->toggleResponse(__('NaiveCrud::messages.bulk-updated', ['count' => $count]));
+    }
+
+    protected function toggleResponse(string $message): Response|Responsable
+    {
+        return $this->success(message: $message);
     }
 }

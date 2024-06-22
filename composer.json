@@ -20,7 +20,10 @@
   "autoload": {
     "psr-4": {
       "Aldeebhasan\\NaiveCrud\\": "src/"
-    }
+    },
+    "files": [
+      "src/Logic/helpers.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {

@@ -4,8 +4,8 @@ namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
 use Aldeebhasan\NaiveCrud\Http\Requests\BaseRequest;
 use Aldeebhasan\NaiveCrud\Http\Resources\BaseResource;
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +17,7 @@ trait UpdateTrait
     protected ?string $bulkUpdateAction = null;
 
     /** @param BaseRequest $request */
-    public function update(Request $request, $id): Response
+    public function update(Request $request, $id): Response|Responsable
     {
         $query = $this->baseQueryResolver($request)->build();
 
@@ -34,13 +34,18 @@ trait UpdateTrait
 
         $this->afterUpdateHook($request, $item);
 
-        $data = $this->formatUpdateResponse($item);
+        $data = $this->formatUpdateItem($item);
 
-        return $this->success($data, __('NaiveCrud::messages.updated'));
+        return $this->updateResponse(__('NaiveCrud::messages.updated'), $data);
+    }
+
+    protected function updateResponse(string $message, array $data): Response|Responsable
+    {
+        return $this->success($data, $message);
     }
 
     /** @param BaseRequest $request */
-    public function bulkUpdate(Request $request): JsonResponse
+    public function bulkUpdate(Request $request): Response|Responsable
     {
         $this->can($this->getUpdateAbility());
 
@@ -66,7 +71,12 @@ trait UpdateTrait
 
         $this->afterBulkUpdateHook($request);
 
-        return $this->success(message: __('NaiveCrud::messages.bulk-updated', ['count' => $count]));
+        return $this->bulkUpdateResponse(__('NaiveCrud::messages.bulk-updated', ['count' => $count]));
+    }
+
+    protected function bulkUpdateResponse(string $message): Response|Responsable
+    {
+        return $this->success(message: $message);
     }
 
     protected function extraUpdateData(): array
@@ -74,7 +84,7 @@ trait UpdateTrait
         return [];
     }
 
-    protected function formatUpdateResponse(Model $item): array
+    protected function formatUpdateItem(Model $item): array
     {
         $resource = $this->modelResource ?? BaseResource::class;
 

@@ -3,6 +3,7 @@
 namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
 use Aldeebhasan\NaiveCrud\Http\Resources\BaseResource;
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -15,7 +16,7 @@ trait ShowTrait
         return $query;
     }
 
-    public function show(Request $request, $id): Response
+    public function show(Request $request, $id): Response|Responsable
     {
 
         $query = $this->baseQueryResolver($request)
@@ -26,12 +27,17 @@ trait ShowTrait
         $this->can($this->getShowAbility(), $item);
 
         $this->beforeShowHook($request, $item);
-        $data = $this->formatShowResponse($item);
+        $data = $this->formatShowItem($item);
         $data = array_merge($data, $this->extraShowData());
 
         $this->afterShowHook($request, $item);
 
-        return $this->success($data, __('NaiveCrud::messages.success'));
+        return $this->showResponse(__('NaiveCrud::messages.success'), $data);
+    }
+
+    protected function showResponse(string $message, array $data): Response|Responsable
+    {
+        return $this->success($data, $message);
     }
 
     protected function extraShowData(): array
@@ -39,7 +45,7 @@ trait ShowTrait
         return [];
     }
 
-    protected function formatShowResponse(Model $item): array
+    protected function formatShowItem(Model $item): array
     {
         $resource = $this->modelResource ?? BaseResource::class;
 

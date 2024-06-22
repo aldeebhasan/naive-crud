@@ -6,6 +6,7 @@ use Aldeebhasan\NaiveCrud\Http\Resources\BaseResource;
 use Aldeebhasan\NaiveCrud\Logic\Resolvers\FilterResolver;
 use Aldeebhasan\NaiveCrud\Logic\Resolvers\SortResolver;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -21,7 +22,7 @@ trait IndexTrait
         return $query;
     }
 
-    public function index(Request $request): Response
+    public function index(Request $request): Response|Responsable
     {
         $this->can($this->getIndexAbility());
 
@@ -36,21 +37,33 @@ trait IndexTrait
         } else {
             $items = $query->get();
         }
-        $data = $this->formatIndexResponse($items);
+        $data = $this->formatIndexItems($items);
         $data = array_merge($data, $this->extraIndexData());
         $this->afterIndexHook($request);
+
+        return $this->indexResponse(__('NaiveCrud::messages.success'), $data);
+    }
+
+    protected function indexResponse(string $message, array $data): Response|Responsable
+    {
+        return $this->success($data, $message);
+    }
+
+    public function fields(Request $request): Response|Responsable
+    {
+        $this->can($this->getIndexAbility());
+
+        $data = $this->getFilterAndSortFields($request);
 
         return $this->success($data, __('NaiveCrud::messages.success'));
     }
 
-    public function fields(Request $request): Response
+    protected function getFilterAndSortFields(Request $request): array
     {
-        $this->can($this->getIndexAbility());
-
-        $data['filters'] = FilterResolver::make($request)->setFilters($this->getFilters())->render();
-        $data['sorters'] = SortResolver::make($request)->setSorters($this->getSorters())->render();
-
-        return $this->success($data, __('NaiveCrud::messages.success'));
+        return [
+            'filters' => FilterResolver::make($request)->setFilters($this->getFilters())->render(),
+            'sorters' => SortResolver::make($request)->setSorters($this->getSorters())->render(),
+        ];
     }
 
     protected function getLimit(): ?int
@@ -63,7 +76,7 @@ trait IndexTrait
         return [];
     }
 
-    protected function formatIndexResponse(Collection|Paginator $items): array
+    protected function formatIndexItems(Collection|Paginator $items): array
     {
         $resource = $this->modelResource ?? BaseResource::class;
 
