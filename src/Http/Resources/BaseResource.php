@@ -15,6 +15,8 @@ class BaseResource extends JsonResource
 
     protected bool $forSearch = false;
 
+    public static $wrap = false;
+
     public function withUser(?Authenticatable $user): self
     {
         $this->user = $user;
