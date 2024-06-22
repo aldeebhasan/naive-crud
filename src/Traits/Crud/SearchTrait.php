@@ -5,8 +5,8 @@ namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 use Aldeebhasan\NaiveCrud\Http\Resources\BaseResource;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 trait SearchTrait
 {
@@ -17,7 +17,7 @@ trait SearchTrait
         return $query;
     }
 
-    public function search(Request $request): JsonResponse
+    public function search(Request $request): Response
     {
         $this->can($this->getIndexAbility());
 

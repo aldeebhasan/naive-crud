@@ -8,7 +8,6 @@ use Aldeebhasan\NaiveCrud\Http\Requests\BaseRequest;
 use Aldeebhasan\NaiveCrud\Jobs\CompletedExportJob;
 use Aldeebhasan\NaiveCrud\Logic\Managers\FileManager;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Excel;
@@ -26,7 +25,7 @@ trait ExportTrait
     }
 
     /** @param BaseRequest $request */
-    public function export(Request $request): Response|JsonResponse
+    public function export(Request $request): Response
     {
         $this->can($this->getExportAbility());
 

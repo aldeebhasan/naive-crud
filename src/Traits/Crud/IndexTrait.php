@@ -7,10 +7,10 @@ use Aldeebhasan\NaiveCrud\Logic\Resolvers\FilterResolver;
 use Aldeebhasan\NaiveCrud\Logic\Resolvers\SortResolver;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Symfony\Component\HttpFoundation\Response;
 
 trait IndexTrait
 {
@@ -21,7 +21,7 @@ trait IndexTrait
         return $query;
     }
 
-    public function index(Request $request): JsonResponse
+    public function index(Request $request): Response
     {
         $this->can($this->getIndexAbility());
 
@@ -43,7 +43,7 @@ trait IndexTrait
         return $this->success($data, __('NaiveCrud::messages.success'));
     }
 
-    public function fields(Request $request): JsonResponse
+    public function fields(Request $request): Response
     {
         $this->can($this->getIndexAbility());
 

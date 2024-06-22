@@ -7,7 +7,6 @@ use Aldeebhasan\NaiveCrud\Excel\Export\TemplateExport;
 use Aldeebhasan\NaiveCrud\Excel\Import\ModelImport;
 use Aldeebhasan\NaiveCrud\Exception\NCException;
 use Aldeebhasan\NaiveCrud\Http\Requests\BaseRequest;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
@@ -16,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 trait ImportTrait
 {
     /** @param BaseRequest $request */
-    public function import(Request $request): JsonResponse
+    public function import(Request $request): Response
     {
         $this->can($this->getImportAbility());
 

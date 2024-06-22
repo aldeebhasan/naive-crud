@@ -2,11 +2,11 @@
 
 namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
-use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 trait ResponseTrait
 {
-    protected function success(array $data = [], string $message = '', int $status = 200): JsonResponse
+    protected function success(array $data = [], string $message = '', int $status = 200): Response
     {
         $message = $message ?: __('NaiveCrud::messages.success');
 
@@ -16,7 +16,7 @@ trait ResponseTrait
         ], $status);
     }
 
-    protected function fail(string $message = '', int $status = 400, array $data = []): JsonResponse
+    protected function fail(string $message = '', int $status = 400, array $data = []): Response
     {
         $message = $message ?: __('NaiveCrud::messages.failed');
 
@@ -26,7 +26,7 @@ trait ResponseTrait
         ], $status);
     }
 
-    protected function notFound(): JsonResponse
+    protected function notFound(): Response
     {
         return $this->fail(message: __('NaiveCrud::messages.notfound'), status: 404);
     }

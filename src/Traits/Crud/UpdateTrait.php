@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Symfony\Component\HttpFoundation\Response;
 
 trait UpdateTrait
 {
@@ -16,7 +17,7 @@ trait UpdateTrait
     protected ?string $bulkUpdateAction = null;
 
     /** @param BaseRequest $request */
-    public function update(Request $request, $id): JsonResponse
+    public function update(Request $request, $id): Response
     {
         $query = $this->baseQueryResolver($request)->build();
 

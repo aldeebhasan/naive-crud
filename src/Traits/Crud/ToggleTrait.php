@@ -3,13 +3,13 @@
 namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
 use Aldeebhasan\NaiveCrud\Http\Requests\BaseRequest;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 trait ToggleTrait
 {
     /** @param BaseRequest $request */
-    public function toggle(Request $request): JsonResponse
+    public function toggle(Request $request): Response
     {
         $this->can($this->getUpdateAbility());
 

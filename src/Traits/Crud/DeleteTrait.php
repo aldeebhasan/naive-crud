@@ -2,9 +2,9 @@
 
 namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Symfony\Component\HttpFoundation\Response;
 
 trait DeleteTrait
 {
@@ -12,7 +12,7 @@ trait DeleteTrait
 
     protected ?string $bulkDeleteAction = null;
 
-    public function destroy(Request $request, $id): JsonResponse
+    public function destroy(Request $request, $id): Response
     {
 
         $query = $this->baseQueryResolver($request)->build();
@@ -30,7 +30,7 @@ trait DeleteTrait
         return $this->success(message: __('NaiveCrud::messages.deleted'));
     }
 
-    public function bulkDestroy(Request $request): JsonResponse
+    public function bulkDestroy(Request $request): Response
     {
         $this->can($this->getDeleteAbility());
 

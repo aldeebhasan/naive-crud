@@ -5,9 +5,9 @@ namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 use Aldeebhasan\NaiveCrud\Http\Requests\BaseRequest;
 use Aldeebhasan\NaiveCrud\Http\Resources\BaseResource;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Symfony\Component\HttpFoundation\Response;
 
 trait StoreTrait
 {
@@ -16,7 +16,7 @@ trait StoreTrait
     protected ?string $bulkCreateAction = null;
 
     /** @param BaseRequest $request */
-    public function store(Request $request): JsonResponse
+    public function store(Request $request): Response
     {
         $this->can($this->getCreateAbility());
         $data = $request->validated();
@@ -35,7 +35,7 @@ trait StoreTrait
     }
 
     /** @param BaseRequest $request */
-    public function bulkStore(Request $request): JsonResponse
+    public function bulkStore(Request $request): Response
     {
         $this->can($this->getCreateAbility());
         $data = $request->validated();

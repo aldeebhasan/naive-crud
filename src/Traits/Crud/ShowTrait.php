@@ -5,8 +5,8 @@ namespace Aldeebhasan\NaiveCrud\Traits\Crud;
 use Aldeebhasan\NaiveCrud\Http\Resources\BaseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 trait ShowTrait
 {
@@ -15,7 +15,7 @@ trait ShowTrait
         return $query;
     }
 
-    public function show(Request $request, $id): JsonResponse
+    public function show(Request $request, $id): Response
     {
 
         $query = $this->baseQueryResolver($request)
