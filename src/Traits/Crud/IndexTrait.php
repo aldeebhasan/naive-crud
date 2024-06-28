@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Response;
 trait IndexTrait
 {
     protected bool $paginated = true;
+    protected bool $preserveQueryParams = true;
+    protected array $paginationMeta = ['current_page', 'from', 'last_page', 'path', 'per_page', 'to', 'total'];
 
     protected function indexQuery(Builder $query): Builder
     {
@@ -34,6 +36,9 @@ trait IndexTrait
 
         if ($this->paginated) {
             $items = $query->paginate(perPage: $this->getLimit());
+            if ($this->preserveQueryParams) {
+                $items->withQueryString();
+            }
         } else {
             $items = $query->get();
         }
@@ -83,9 +88,7 @@ trait IndexTrait
         if ($this->paginated) {
             return [
                 'items' => $resource::collectionCustom($items->items(), $this->resolveUser())->toArray(),
-                'meta' => Arr::except($items->toArray(), [
-                    'data', 'first_page_url', 'last_page_url', 'prev_page_url', 'next_page_url', 'links',
-                ]),
+                'meta' => Arr::only($items->toArray(), $this->paginationMeta),
             ];
         } else {
             return $resource::collectionCustom($items)->toArray();
