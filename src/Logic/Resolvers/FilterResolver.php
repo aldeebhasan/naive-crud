@@ -44,7 +44,7 @@ class FilterResolver
     public function apply(Builder $query): Builder
     {
         foreach ($this->filters as $filter) {
-            $fields = $filter->fields();
+            $fields = app($filter)->fields();
             $this->handleFields($query, $fields);
 
         }
@@ -89,7 +89,7 @@ class FilterResolver
     {
         $resultFields = [];
         foreach ($this->filters as $filter) {
-            $fields = $filter->fields();
+            $fields = app($filter)->fields();
             foreach ($fields as $field) {
                 $resultFields[$field->field] = $this->renderSingleField($field);
             }
