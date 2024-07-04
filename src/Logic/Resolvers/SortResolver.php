@@ -44,7 +44,7 @@ class SortResolver
     public function apply(Builder $query): Builder
     {
         foreach ($this->sorts as $sort) {
-            $fields = app($sort)->fields();
+            $fields = $sort instanceof SortUI ? $sort->fields() : app($sort)->fields();
             $this->handleFields($query, $fields);
         }
 
@@ -74,7 +74,7 @@ class SortResolver
     {
         $resultFields = [];
         foreach ($this->sorts as $sort) {
-            $fields = app($sort)->fields();
+            $fields = $sort instanceof SortUI ? $sort->fields() : app($sort)->fields();
             foreach ($fields as $field) {
                 $resultFields[$field->field] = $this->renderSingleField($field);
             }

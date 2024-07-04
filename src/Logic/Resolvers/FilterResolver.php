@@ -44,7 +44,7 @@ class FilterResolver
     public function apply(Builder $query): Builder
     {
         foreach ($this->filters as $filter) {
-            $fields = app($filter)->fields();
+            $fields = $filter instanceof FilterUI ? $filter->fields() : app($filter)->fields();
             $this->handleFields($query, $fields);
 
         }
@@ -72,8 +72,8 @@ class FilterResolver
                 '%like' => '%'.$value,
                 default => $value
             };
-            if (! empty($callback) && is_callable($callback)) {
-                call_user_func($callback, $query, $value);
+            if (! empty($field->callback) && is_callable($field->callback)) {
+                call_user_func($field->callback, $query, $value);
             } elseif (! empty($relation) && is_string($relation)) {
                 $query->whereHas($relation, function ($q) use ($field, $value) {
                     $q->where($field->column, $field->operator, $value);
@@ -89,7 +89,7 @@ class FilterResolver
     {
         $resultFields = [];
         foreach ($this->filters as $filter) {
-            $fields = app($filter)->fields();
+            $fields = $filter instanceof FilterUI ? $filter->fields() : app($filter)->fields();
             foreach ($fields as $field) {
                 $resultFields[$field->field] = $this->renderSingleField($field);
             }
