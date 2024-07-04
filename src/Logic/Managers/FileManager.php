@@ -23,11 +23,30 @@ class FileManager
 
     protected array $thumbnailDim = [];
 
-    protected UploadedFile $file;
+    protected string $file;
+    protected array $meta = [
+        'mime' => 'image/jpeg',
+        'size' => "1024",
+        'extension' => 'jpeg',
+    ];
 
-    public function setFile(UploadedFile $file): self
+    public function setFile(UploadedFile|string $file): self
     {
-        $this->file = $file;
+        if ($file instanceof UploadedFile) {
+            $this->meta = [
+                'mime' => $file->getMimeType(),
+                'size' => $file->getSize(),
+                'extension' => strtolower($file->getClientOriginalExtension()) === 'png' ? 'png' : 'jpeg',
+            ];
+            $this->file = file_get_contents($file);
+        } else {
+            if (str($file)->startsWith("http")) {
+                $this->file = file_get_contents($file);
+            } else {
+                $file = $this->getStoragePath($file);
+                $this->file = Storage::read($file);
+            }
+        }
 
         return $this;
     }
@@ -55,7 +74,7 @@ class FileManager
         $this->resize = true;
         $this->imageDim = [
             'width' => $width,
-            'height' => $height ?? $width,
+            'height' => $height ?? null,
         ];
 
         return $this;
@@ -63,49 +82,44 @@ class FileManager
 
     public function uploadImage(string $name = ''): array
     {
-        $extension = strtolower($this->file->getClientOriginalExtension()) === 'png' ? 'png' : 'jpeg';
-        $file = file_get_contents($this->file);
-
-        $image = ImageManager::imagick()->read($file);
+        $image = ImageManager::imagick()->read($this->file);
         if ($this->resize) {
             $image = $image->scaleDown($this->imageDim['width'], $this->imageDim['height']);
         }
-        $encoded = $image->encodeByExtension($extension, quality: 75)->toString();
+        $encoded = $image->encodeByExtension($this->meta['extension'], quality: 75)->toString();
 
-        $name = $name ?: (time().uniqid());
-        $response = $this->upload($encoded, $name, $extension);
+        $name = $name ?: (time() . uniqid());
+        $response = $this->upload($encoded, $name);
 
-        $this->generateThumbnail($file, $name, $extension);
+        $this->generateThumbnail($name);
 
         return $response;
     }
 
-    protected function generateThumbnail(string $file, string $name, string $extension): void
+    protected function generateThumbnail(string $name): void
     {
-        if (! $this->thumbnail) {
+        if (!$this->thumbnail) {
             return;
         }
 
-        $image = ImageManager::imagick()->read($file);
+        $image = ImageManager::imagick()->read($this->file);
         $image = $image->cover($this->thumbnailDim['width'], $this->thumbnailDim['height']);
-        $encoded = $image->encodeByExtension($extension, quality: 75)->toString();
+        $encoded = $image->encodeByExtension($this->meta['extension'], quality: 75)->toString();
 
         $thumbnailName = "thumbnails/$name";
-        $this->upload($encoded, $thumbnailName, $extension);
+        $this->upload($encoded, $thumbnailName);
     }
 
     public function uploadFile(string $name = ''): array
     {
-        $extension = $this->file->getClientOriginalExtension();
-        $file = file_get_contents($this->file);
 
-        return $this->upload($file, $name, $extension);
+        return $this->upload($this->file, $name);
     }
 
-    private function upload(string $file, string $name, string $extension): array
+    private function upload(string $file, string $name): array
     {
-        $name = $name ?: (time().uniqid());
-        $name = "$name.$extension";
+        $name = $name ?: (time() . uniqid());
+        $name = "$name." . $this->meta['extension'];
         $path = "$this->path/$name";
         Storage::put($this->getStoragePath($path), $file, 'public');
         $path = $this->getAssetPath($path);
@@ -114,11 +128,11 @@ class FileManager
             'url' => asset($path),
             'name' => $name,
             'meta' => [
-                'extension' => $extension,
-                'mime' => $this->file->getMimeType(),
+                'extension' => $this->meta['extension'],
+                'mime' => $this->meta['mime'],
             ],
             'size' => [
-                'value' => round($this->file->getSize() / 1024, 3),
+                'value' => round($this->meta['size'] / 1024, 3),
                 'unit' => 'KB',
             ],
         ];
