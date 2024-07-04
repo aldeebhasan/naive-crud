@@ -103,8 +103,10 @@ class FilterResolver
         return [
             'type' => $field->type,
             'name' => $field->field,
+            'url' => $field->resourceURL,
             'label' => $field->label ?? str($field->field)->title()->toString(),
             'value' => (string) ($field->value ?? Arr::get($this->values, $field->field)),
+            'options' => $field->options,
         ];
     }
 }

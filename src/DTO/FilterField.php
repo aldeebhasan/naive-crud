@@ -4,7 +4,7 @@ namespace Aldeebhasan\NaiveCrud\DTO;
 
 use Aldeebhasan\NaiveCrud\Traits\Makable;
 
-/**@method  static FilterField make(string $field, ?string $column = null, ?string $operator = '=', callable $callback = null, mixed $value = null) */
+/**@method  static FilterField make(string $field, ?string $column = null, ?string $operator = '=', callable $callback = null, mixed $value = null, array $options = []) */
 final readonly class FilterField
 {
     use Makable;
@@ -22,7 +22,9 @@ final readonly class FilterField
         callable $callback = null,
         public string $type = 'text',
         public ?string $label = null,
-        public mixed $value = null
+        public mixed $value = null,
+        public array $options = [],
+        public string $resourceURL = '',
     )
     {
         $this->callback = $callback;
