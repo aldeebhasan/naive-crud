@@ -16,7 +16,9 @@ use Symfony\Component\HttpFoundation\Response;
 trait IndexTrait
 {
     protected bool $paginated = true;
+
     protected bool $preserveQueryParams = true;
+
     protected array $paginationMeta = ['current_page', 'from', 'last_page', 'path', 'per_page', 'to', 'total'];
 
     protected function indexQuery(Builder $query): Builder

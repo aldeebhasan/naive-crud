@@ -2,9 +2,13 @@
 
 namespace Aldeebhasan\NaiveCrud\DTO;
 
+use Aldeebhasan\NaiveCrud\Traits\Makable;
+
 /**@method  static FilterField make(string $field, ?string $column = null, ?string $operator = '=', callable $callback = null, mixed $value = null) */
 final readonly class FilterField
 {
+    use Makable;
+
     public ?string $column;
 
     public mixed $callback;

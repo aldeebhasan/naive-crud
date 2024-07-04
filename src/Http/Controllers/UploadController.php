@@ -5,7 +5,6 @@ namespace Aldeebhasan\NaiveCrud\Http\Controllers;
 use Aldeebhasan\NaiveCrud\Logic\Managers\FileManager;
 use Aldeebhasan\NaiveCrud\Traits\Crud\ResponseTrait;
 use Illuminate\Contracts\Support\Responsable;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Symfony\Component\HttpFoundation\Response;

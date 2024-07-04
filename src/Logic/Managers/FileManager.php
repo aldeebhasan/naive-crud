@@ -24,9 +24,10 @@ class FileManager
     protected array $thumbnailDim = [];
 
     protected string $file;
+
     protected array $meta = [
         'mime' => 'image/jpeg',
-        'size' => "1024",
+        'size' => '1024',
         'extension' => 'jpeg',
     ];
 
@@ -40,7 +41,7 @@ class FileManager
             ];
             $this->file = file_get_contents($file);
         } else {
-            if (str($file)->startsWith("http")) {
+            if (str($file)->startsWith('http')) {
                 $this->file = file_get_contents($file);
             } else {
                 $file = $this->getStoragePath($file);
@@ -88,7 +89,7 @@ class FileManager
         }
         $encoded = $image->encodeByExtension($this->meta['extension'], quality: 75)->toString();
 
-        $name = $name ?: (time() . uniqid());
+        $name = $name ?: (time().uniqid());
         $response = $this->upload($encoded, $name);
 
         $this->generateThumbnail($name);
@@ -98,7 +99,7 @@ class FileManager
 
     protected function generateThumbnail(string $name): void
     {
-        if (!$this->thumbnail) {
+        if (! $this->thumbnail) {
             return;
         }
 
@@ -118,8 +119,8 @@ class FileManager
 
     private function upload(string $file, string $name): array
     {
-        $name = $name ?: (time() . uniqid());
-        $name = "$name." . $this->meta['extension'];
+        $name = $name ?: (time().uniqid());
+        $name = "$name.".$this->meta['extension'];
         $path = "$this->path/$name";
         Storage::put($this->getStoragePath($path), $file, 'public');
         $path = $this->getAssetPath($path);
