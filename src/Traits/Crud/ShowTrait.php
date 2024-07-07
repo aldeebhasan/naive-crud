@@ -23,7 +23,7 @@ trait ShowTrait
             ->setExtendQuery($this->showQuery(...))
             ->build();
 
-        $item = $query->findOrFail($id);
+        $item = $this->findShowItem($query, $id);
         $this->can($this->getShowAbility(), $item);
 
         $this->beforeShowHook($request, $item);
@@ -43,6 +43,11 @@ trait ShowTrait
     protected function extraShowData(): array
     {
         return [];
+    }
+
+    protected function findShowItem(Builder $query, string $id): Model
+    {
+        return $query->findOrFail($id);
     }
 
     protected function formatShowItem(Model $item): array
