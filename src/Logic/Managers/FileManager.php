@@ -37,7 +37,7 @@ class FileManager
             $this->meta = [
                 'mime' => $file->getMimeType(),
                 'size' => $file->getSize(),
-                'extension' => strtolower($file->getClientOriginalExtension()) === 'png' ? 'png' : 'jpeg',
+                'extension' => strtolower($file->getClientOriginalExtension()),
             ];
             $this->file = file_get_contents($file);
         } else {
