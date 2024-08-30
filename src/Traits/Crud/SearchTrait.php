@@ -22,7 +22,7 @@ trait SearchTrait
     {
         $this->can($this->getIndexAbility());
 
-        $value = $request->get($this->searchKeyword, '');
+        $value = $request->get($this->searchKeyword, '') ?: '';
         $this->beforeSearchHook($request);
 
         $query = $this->fullQueryResolver($request)
