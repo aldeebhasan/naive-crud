@@ -61,7 +61,7 @@ trait ExportTrait
             $storagePath = FileManager::make()->getStoragePath("exports/{$fileName}");
             $assetPath = FileManager::make()->getAssetPath("exports/{$fileName}");
             $handler->queue($storagePath)->chain([
-                new CompletedExportJob(request()->user(), $assetPath, $this->completedJobNotification),
+                new CompletedExportJob($this->resolveUser(), $assetPath, $this->completedJobNotification),
             ]);
 
             return $this->exportResponse(__('NaiveCrud::messages.exported'));

@@ -24,7 +24,7 @@ trait ImportTrait
         $file = $validated['file'];
 
         $this->beforeImportHook($request);
-        $user = auth()->user();
+        $user = $this->resolveUser();
         Excel::import(new ModelImport($this->model, $user), $file);
         $this->afterImportHook($request);
 
@@ -42,7 +42,7 @@ trait ImportTrait
 
         $name = Str::snake(Str::pluralStudly(class_basename($this->model)));
 
-        if (! empty(class_implements($this->model)[ExcelUI::class])){
+        if (! empty(class_implements($this->model)[ExcelUI::class])) {
             $fields = $this->model::headerFields();
 
             return Excel::download(new TemplateExport($fields), "{$name}-template.csv");

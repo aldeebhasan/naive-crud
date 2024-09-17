@@ -127,6 +127,7 @@ class FileManager
 
         return [
             'url' => asset($path),
+            'relative_url' => $path,
             'name' => $name,
             'meta' => [
                 'extension' => $this->meta['extension'],

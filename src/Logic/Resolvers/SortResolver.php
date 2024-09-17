@@ -62,7 +62,7 @@ class SortResolver
             $direction = in_array($direction, ['asc', 'desc']) ? $direction : $field->value;
 
             if (! empty($field->callback) && is_callable($field->callback)) {
-                call_user_func($field->callback, $query);
+                call_user_func($field->callback, $query, $direction);
             } else {
                 $query->orderBy($field->column, $direction);
             }
